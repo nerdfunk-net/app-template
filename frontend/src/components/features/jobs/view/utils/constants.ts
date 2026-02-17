@@ -15,14 +15,7 @@ export const STATUS_OPTIONS: readonly FilterOption[] = [
 ] as const
 
 export const JOB_TYPE_OPTIONS: readonly FilterOption[] = [
-  { value: "backup", label: "Backup" },
-  { value: "cache_locations", label: "Cache Locations" },
-  { value: "cache_git_commits", label: "Cache Git Commits" },
-  { value: "sync_devices", label: "Sync Devices" },
-  { value: "run_commands", label: "Run Commands" },
-  { value: "compare_devices", label: "Compare Devices" },
-  { value: "scan_prefixes", label: "Scan Prefixes" },
-  { value: "deploy_agent", label: "Deploy Agent" },
+  { value: "example", label: "Example" },
 ] as const
 
 export const TRIGGER_OPTIONS: readonly FilterOption[] = [
