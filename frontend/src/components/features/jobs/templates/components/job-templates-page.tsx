@@ -4,18 +4,13 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus, FileText, Loader2 } from 'lucide-react'
-import { useJobTemplates, useJobTypes, useConfigRepos, useCommandTemplates, useCustomFields } from '../hooks/use-template-queries'
+import { useJobTemplates } from '../hooks/use-template-queries'
 import { TemplateFormDialog } from './template-form-dialog'
 import { TemplatesTable } from './templates-table'
-import type { JobTemplate, JobType, GitRepository, CommandTemplate, CustomField } from '../types'
+import type { JobTemplate } from '../types'
 
 // Constants for default parameters to prevent re-render loops
 const EMPTY_TEMPLATES: JobTemplate[] = []
-const EMPTY_JOB_TYPES: JobType[] = []
-const EMPTY_CONFIG_REPOS: GitRepository[] = []
-const EMPTY_INVENTORIES: never[] = [] // Inventory feature removed
-const EMPTY_COMMAND_TEMPLATES: CommandTemplate[] = []
-const EMPTY_CUSTOM_FIELDS: CustomField[] = []
 
 export function JobTemplatesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -23,14 +18,6 @@ export function JobTemplatesPage() {
 
   // TanStack Query hooks - replaces ALL manual state management
   const { data: templates = EMPTY_TEMPLATES, isLoading } = useJobTemplates()
-  const { data: jobTypes = EMPTY_JOB_TYPES } = useJobTypes()
-  const { data: configRepos = EMPTY_CONFIG_REPOS } = useConfigRepos()
-  const { data: commandTemplates = EMPTY_COMMAND_TEMPLATES } = useCommandTemplates()
-  const { data: customFields = EMPTY_CUSTOM_FIELDS } = useCustomFields()
-  
-  // Inventory feature removed - use empty array
-  const savedInventories = EMPTY_INVENTORIES
-  const loadingInventories = false
 
   const handleEditTemplate = (template: JobTemplate) => {
     setEditingTemplate(template)
@@ -105,12 +92,6 @@ export function JobTemplatesPage() {
         open={isDialogOpen}
         onOpenChange={handleDialogClose}
         editingTemplate={editingTemplate}
-        jobTypes={jobTypes}
-        configRepos={configRepos}
-        savedInventories={savedInventories}
-        commandTemplates={commandTemplates}
-        customFields={customFields}
-        loadingInventories={loadingInventories}
         onSaved={handleSaved}
       />
     </div>

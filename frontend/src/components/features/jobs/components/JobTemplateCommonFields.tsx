@@ -8,12 +8,6 @@ import { Globe, Lock, ShieldAlert } from "lucide-react"
 import { hasPermission } from "@/lib/permissions"
 import type { User } from "@/types/auth"
 
-interface JobType {
-  value: string
-  label: string
-  description: string
-}
-
 interface JobTemplateCommonFieldsProps {
   formName: string
   setFormName: (value: string) => void
@@ -23,10 +17,8 @@ interface JobTemplateCommonFieldsProps {
   setFormDescription: (value: string) => void
   formIsGlobal: boolean
   setFormIsGlobal: (value: boolean) => void
-  jobTypes: JobType[]
   user: User | null
   editingTemplate: boolean
-  getJobTypeColor: (jobType: string) => string
 }
 
 export function JobTemplateCommonFields({
@@ -38,10 +30,8 @@ export function JobTemplateCommonFields({
   setFormDescription,
   formIsGlobal,
   setFormIsGlobal,
-  jobTypes,
   user,
   editingTemplate,
-  getJobTypeColor,
 }: JobTemplateCommonFieldsProps) {
   const canCreateGlobalTemplate = hasPermission(user, 'jobs', 'write')
 
@@ -75,14 +65,12 @@ export function JobTemplateCommonFields({
               <SelectValue placeholder="Select job type" />
             </SelectTrigger>
             <SelectContent>
-              {jobTypes.map((type) => (
-                <SelectItem key={type.value} value={type.value}>
-                  <div className="flex items-center gap-2">
-                    <div className={`h-2 w-2 rounded-full ${getJobTypeColor(type.value)}`} />
-                    <span>{type.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
+              <SelectItem value="example">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-blue-500" />
+                  <span>Example</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
