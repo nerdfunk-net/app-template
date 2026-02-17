@@ -1,7 +1,7 @@
 """Seed script for RBAC system.
 
 This script initializes the RBAC system with:
-- Default permissions for all resources
+- Default permissions for all scaffold resources
 - System roles (admin, operator, network_engineer, viewer)
 - Permission assignments to roles
 """
@@ -10,114 +10,6 @@ import argparse
 import sys
 import rbac_manager as rbac
 import user_db_manager as user_db
-
-
-def migrate_inventory_permissions(verbose: bool = True):
-    """Migrate network.inventory permissions to general.inventory.
-
-    This function handles migration for existing systems that have
-    network.inventory permissions assigned to roles or users.
-    """
-    if verbose:
-        print(
-            "\nMigrating inventory permissions from network.inventory to general.inventory..."
-        )
-
-    # Get all permissions
-    all_permissions = rbac.list_permissions()
-
-    # Find old network.inventory permissions
-    old_perms = {
-        p["id"]: p for p in all_permissions if p["resource"] == "network.inventory"
-    }
-
-    if not old_perms and verbose:
-        print("  - No network.inventory permissions found to migrate")
-        return
-
-    # Get all roles
-    all_roles = rbac.list_roles()
-
-    # For each role, check if it has network.inventory permissions
-    migrated_count = 0
-    for role in all_roles:
-        role_perms = rbac.get_role_permissions(role["id"])
-
-        for old_perm_id, old_perm in old_perms.items():
-            # Check if this role has the old permission
-            if any(p["id"] == old_perm_id for p in role_perms):
-                # Find or create the corresponding general.inventory permission
-                action = old_perm["action"]
-                try:
-                    # Create the new permission if it doesn't exist
-                    new_perm_id = None
-                    for p in all_permissions:
-                        if (
-                            p["resource"] == "general.inventory"
-                            and p["action"] == action
-                        ):
-                            new_perm_id = p["id"]
-                            break
-
-                    if new_perm_id:
-                        # Assign the new permission to the role
-                        rbac.assign_permission_to_role(
-                            role["id"], new_perm_id, granted=True
-                        )
-                        migrated_count += 1
-                        if verbose:
-                            print(
-                                f"  ✓ Migrated {old_perm['resource']}:{action} -> general.inventory:{action} for role '{role['name']}'"
-                            )
-                except Exception as e:
-                    if verbose:
-                        print(
-                            f"  ✗ Error migrating permission for role '{role['name']}': {e}"
-                        )
-
-    if verbose:
-        if migrated_count > 0:
-            print(f"\n  ✅ Migrated {migrated_count} permission assignments")
-        else:
-            print("  - No permissions needed migration")
-
-
-def cleanup_obsolete_permissions(verbose: bool = True):
-    """Remove obsolete permissions that are no longer used.
-
-    This removes old permissions like network.inventory that have been
-    replaced by newer permissions (e.g., general.inventory).
-    """
-    if verbose:
-        print("\nCleaning up obsolete permissions...")
-
-    obsolete_resources = [
-        "network.inventory",  # Replaced by general.inventory
-    ]
-
-    all_permissions = rbac.list_permissions()
-    removed_count = 0
-
-    for perm in all_permissions:
-        if perm["resource"] in obsolete_resources:
-            try:
-                rbac.delete_permission(perm["id"])
-                removed_count += 1
-                if verbose:
-                    print(
-                        f"  ✓ Removed obsolete permission: {perm['resource']}:{perm['action']}"
-                    )
-            except Exception as e:
-                if verbose:
-                    print(
-                        f"  ✗ Error removing permission {perm['resource']}:{perm['action']}: {e}"
-                    )
-
-    if verbose:
-        if removed_count > 0:
-            print(f"\n  ✅ Removed {removed_count} obsolete permissions")
-        else:
-            print("  - No obsolete permissions found")
 
 
 def remove_all_rbac_data(verbose: bool = True):
@@ -279,75 +171,23 @@ def seed_permissions(verbose: bool = True):
     permissions = [
         # Dashboard permissions
         ("dashboard.settings", "read", "Access to Settings menu and pages"),
-        # Nautobot permissions
-        ("nautobot.devices", "read", "View Nautobot devices"),
-        ("nautobot.devices", "write", "Create/update Nautobot devices"),
-        ("nautobot.devices", "delete", "Delete Nautobot devices"),
-        ("nautobot.locations", "read", "View Nautobot locations"),
-        ("nautobot.locations", "write", "Create/update Nautobot locations"),
-        ("nautobot.export", "execute", "Export Nautobot device data"),
-        ("nautobot.export", "read", "Download exported device files"),
-        ("nautobot.csv_updates", "read", "View CSV updates"),
-        ("nautobot.csv_updates", "write", "Create/modify CSV updates"),
-        ("nautobot.csv_updates", "execute", "Execute CSV update operations"),
-        ("settings.nautobot", "read", "View Nautobot settings"),
-        ("settings.nautobot", "write", "Modify Nautobot settings"),
-        # CheckMK permissions
-        ("checkmk.devices", "read", "View CheckMK devices"),
-        ("checkmk.devices", "write", "Create/update CheckMK devices"),
-        ("checkmk.devices", "delete", "Delete CheckMK devices"),
-        ("settings.checkmk", "read", "View CheckMK settings"),
-        ("settings.checkmk", "write", "Modify CheckMK settings"),
-        # Compliance permissions
-        ("settings.compliance", "read", "View compliance settings"),
-        ("settings.compliance", "write", "Modify compliance settings"),
-        ("compliance.check", "execute", "Execute compliance checks"),
-        # Config permissions
-        ("configs", "read", "View device configurations"),
-        ("configs.backup", "execute", "Execute configuration backups"),
-        ("configs.compare", "execute", "Compare configurations"),
-        # Network backup permissions
-        ("network.backup", "read", "View device backup status and history"),
-        ("network.backup", "write", "Execute device configuration backups"),
-        # General inventory permissions (moved from network.inventory)
-        ("general.inventory", "read", "View device inventory"),
-        ("general.inventory", "write", "Modify device inventory"),
-        ("general.inventory", "delete", "Delete device inventory"),
-        # Network automation permissions
-        ("network.templates", "read", "View configuration templates"),
-        ("network.templates", "write", "Create/modify templates"),
-        ("network.templates", "delete", "Delete templates"),
-        ("network.netmiko", "execute", "Execute Netmiko commands"),
-        ("network.ping", "execute", "Execute network ping operations"),
-        # Snapshot permissions
-        ("snapshots", "read", "View network snapshots"),
-        ("snapshots", "write", "Create/execute network snapshots"),
-        ("snapshots", "delete", "Delete network snapshots"),
         # Git permissions
         ("git.repositories", "read", "View git repositories"),
         ("git.repositories", "write", "Create/modify git repositories"),
         ("git.repositories", "delete", "Delete git repositories"),
         ("git.operations", "execute", "Execute git operations (commit, push, pull)"),
-        # Scan & Add permissions
-        ("scan", "execute", "Execute network scans"),
-        ("devices.onboard", "execute", "Onboard new devices"),
-        ("devices.offboard", "execute", "Offboard devices"),
         # Settings permissions
+        ("settings.git", "read", "View Git settings"),
+        ("settings.git", "write", "Modify Git settings"),
         ("settings.cache", "read", "View cache settings"),
-        ("settings.cache", "write", "Modify cache settings"),
+        ("settings.cache", "write", "Modify cache settings and manage cache"),
         ("settings.celery", "read", "View Celery task queue status"),
         ("settings.celery", "write", "Manage Celery tasks and workers"),
         ("settings.credentials", "read", "View credentials"),
         ("settings.credentials", "write", "Create/modify credentials"),
         ("settings.credentials", "delete", "Delete credentials"),
-        (
-            "settings.common",
-            "read",
-            "View common settings (SNMP mapping with passwords)",
-        ),
-        ("settings.common", "write", "Modify common settings (SNMP mapping)"),
-        ("settings.templates", "read", "View template settings"),
-        ("settings.templates", "write", "Modify template settings"),
+        ("settings.common", "read", "View common settings"),
+        ("settings.common", "write", "Modify common settings"),
         # User management permissions
         ("users", "read", "View users"),
         ("users", "write", "Create/modify users"),
@@ -360,13 +200,14 @@ def seed_permissions(verbose: bool = True):
         ("rbac.roles", "delete", "Delete roles"),
         ("rbac.permissions", "read", "View all permissions"),
         # Jobs permissions
-        ("jobs", "read", "View scheduled jobs"),
-        ("jobs", "write", "Create/modify scheduled jobs"),
-        ("jobs", "delete", "Delete scheduled jobs"),
-        ("jobs", "execute", "Execute jobs manually"),
-        # Cockpit Agent permissions
-        ("cockpit_agents", "read", "View Cockpit agents and their status"),
-        ("cockpit_agents", "execute", "Execute commands on Cockpit agents"),
+        ("jobs.templates", "read", "View job templates"),
+        ("jobs.templates", "write", "Create/modify job templates"),
+        ("jobs.templates", "delete", "Delete job templates"),
+        ("jobs.schedules", "read", "View job schedules"),
+        ("jobs.schedules", "write", "Create/modify job schedules"),
+        ("jobs.schedules", "delete", "Delete job schedules"),
+        ("jobs.runs", "read", "View job execution history"),
+        ("jobs.runs", "execute", "Execute jobs manually"),
     ]
 
     created_count = 0
@@ -441,57 +282,30 @@ def assign_permissions_to_roles(roles, verbose: bool = True):
     if verbose:
         print(f"    ✓ Assigned {admin_count} permissions")
 
-    # Operator: Manage devices and configs, read settings
+    # Operator: Manage jobs and templates, read settings
     if verbose:
         print("\n  Assigning permissions to 'operator' role...")
     operator_perms = [
-        # Nautobot
-        "nautobot.devices:read",
-        "nautobot.devices:write",
-        "nautobot.devices:delete",
-        "nautobot.locations:read",
-        "nautobot.locations:write",
-        "nautobot.export:execute",
-        "nautobot.export:read",
-        "nautobot.csv_updates:read",
-        "nautobot.csv_updates:execute",
-        "settings.nautobot:read",
-        # CheckMK
-        "checkmk.devices:read",
-        "checkmk.devices:write",
-        "checkmk.devices:delete",
-        "settings.checkmk:read",
-        # Compliance
-        "settings.compliance:read",
-        "settings.compliance:write",
-        "compliance.check:execute",
-        # Configs
-        "configs:read",
-        "configs.backup:execute",
-        "configs.compare:execute",
-        # Network Backup
-        "network.backup:read",
-        "network.backup:write",
-        # Inventory
-        "general.inventory:read",
-        "general.inventory:write",
-        # Network
-        "network.templates:read",
-        # Snapshots
-        "snapshots:read",
-        "snapshots:write",
-        # Scan & Add
-        "scan:execute",
-        "devices.onboard:execute",
-        "devices.offboard:execute",
+        # Dashboard
+        "dashboard.settings:read",
+        # Git
+        "git.repositories:read",
+        "git.operations:execute",
         # Settings (read-only)
+        "settings.git:read",
         "settings.cache:read",
+        "settings.celery:read",
         "settings.credentials:read",
-        "settings.templates:read",
-        # Jobs
-        "jobs:read",
-        "jobs:write",
-        "jobs:execute",
+        "settings.common:read",
+        # Jobs (full access)
+        "jobs.templates:read",
+        "jobs.templates:write",
+        "jobs.templates:delete",
+        "jobs.schedules:read",
+        "jobs.schedules:write",
+        "jobs.schedules:delete",
+        "jobs.runs:read",
+        "jobs.runs:execute",
     ]
     operator_count = 0
     for perm_key in operator_perms:
@@ -503,65 +317,12 @@ def assign_permissions_to_roles(roles, verbose: bool = True):
     if verbose:
         print(f"    ✓ Assigned {operator_count} permissions")
 
-    # Network Engineer: Full network tools, read-only for system
+    # Network Engineer: Same as operator for scaffold (can be customized later)
     if verbose:
         print("\n  Assigning permissions to 'network_engineer' role...")
-    network_engineer_perms = [
-        # Dashboard
-        "dashboard.settings:read",
-        # Nautobot
-        "nautobot.devices:read",
-        "nautobot.devices:write",
-        "nautobot.locations:read",
-        "nautobot.locations:write",
-        "nautobot.export:execute",
-        "nautobot.export:read",
-        "nautobot.csv_updates:read",
-        "nautobot.csv_updates:write",
-        "nautobot.csv_updates:execute",
-        # CheckMK
-        "checkmk.devices:read",
-        "checkmk.devices:write",
-        # Compliance
-        "settings.compliance:read",
-        "compliance.check:execute",
-        # Configs (full access)
-        "configs:read",
-        "configs.backup:execute",
-        "configs.compare:execute",
-        # Network Backup (full access)
-        "network.backup:read",
-        "network.backup:write",
-        # Inventory (full access)
-        "general.inventory:read",
-        "general.inventory:write",
-        "general.inventory:delete",
-        # Network (full access)
-        "network.templates:read",
-        "network.templates:write",
-        "network.templates:delete",
-        "network.netmiko:execute",
-        "network.ping:execute",
-        # Snapshots (full access)
-        "snapshots:read",
-        "snapshots:write",
-        "snapshots:delete",
-        # Git
-        "git.repositories:read",
-        "git.operations:execute",
-        # Scan & Add
-        "scan:execute",
-        "devices.onboard:execute",
-        # Settings (read-only)
-        "settings.cache:read",
-        "settings.credentials:read",
-        "settings.templates:read",
-        # Jobs
-        "jobs:read",
-        "jobs:execute",
-    ]
+    network_perms = operator_perms.copy()
     network_count = 0
-    for perm_key in network_engineer_perms:
+    for perm_key in network_perms:
         if perm_key in perm_map:
             rbac.assign_permission_to_role(
                 roles["network_engineer"]["id"], perm_map[perm_key], granted=True
@@ -570,27 +331,32 @@ def assign_permissions_to_roles(roles, verbose: bool = True):
     if verbose:
         print(f"    ✓ Assigned {network_count} permissions")
 
-    # Viewer: Read-only access to everything except user management and sensitive settings
+    # Viewer: Read-only access to everything except sensitive settings
     if verbose:
         print("\n  Assigning permissions to 'viewer' role...")
+    viewer_perms = [
+        # Dashboard
+        "dashboard.settings:read",
+        # Git
+        "git.repositories:read",
+        # Settings (read-only, excluding credentials)
+        "settings.git:read",
+        "settings.cache:read",
+        "settings.celery:read",
+        # Jobs (read-only)
+        "jobs.templates:read",
+        "jobs.schedules:read",
+        "jobs.runs:read",
+        # RBAC (read-only)
+        "rbac.roles:read",
+        "rbac.permissions:read",
+    ]
     viewer_count = 0
-    for perm_key, perm_id in perm_map.items():
-        # Grant all read permissions, skip write/delete/execute
-        # Exclude sensitive permissions: users, settings.credentials, settings.common
-        if (
-            (
-                ":read" in perm_key
-                or (
-                    ":execute" not in perm_key
-                    and ":write" not in perm_key
-                    and ":delete" not in perm_key
-                    and "users" not in perm_key
-                )
+    for perm_key in viewer_perms:
+        if perm_key in perm_map:
+            rbac.assign_permission_to_role(
+                roles["viewer"]["id"], perm_map[perm_key], granted=True
             )
-            and "settings.common" not in perm_key
-            and "settings.credentials" not in perm_key
-        ):
-            rbac.assign_permission_to_role(roles["viewer"]["id"], perm_id, granted=True)
             viewer_count += 1
     if verbose:
         print(f"    ✓ Assigned {viewer_count} permissions")
@@ -665,13 +431,6 @@ def main(verbose: bool = True, remove_existing: bool = False):
 
     # Assign admin user to admin role
     assign_admin_user_to_admin_role(verbose=verbose)
-
-    # Run migration for existing systems (only if not removing all data)
-    if not remove_existing:
-        migrate_inventory_permissions(verbose=verbose)
-
-        # Cleanup obsolete permissions (after migration is complete)
-        cleanup_obsolete_permissions(verbose=verbose)
 
     if verbose:
         print("=" * 60)

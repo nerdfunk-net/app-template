@@ -40,7 +40,6 @@ export function useCacheSettings(options: UseCacheSettingsOptions = DEFAULT_SETT
       return {
         ...DEFAULT_CACHE_SETTINGS,
         ...response.data,
-        prefetch_items: response.data.prefetch_items || DEFAULT_CACHE_SETTINGS.prefetch_items,
       } as CacheSettings
     },
     enabled,

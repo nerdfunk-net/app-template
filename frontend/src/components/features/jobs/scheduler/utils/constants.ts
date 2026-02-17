@@ -40,7 +40,6 @@ export const JOB_TYPE_LABELS: Record<string, string> = {
   backup: 'Backup',
   compare_devices: 'Compare Devices',
   run_commands: 'Run Commands',
-  cache_devices: 'Cache Devices',
   sync_devices: 'Sync Devices',
 } as const
 

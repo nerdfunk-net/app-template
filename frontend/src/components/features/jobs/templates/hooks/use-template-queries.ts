@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useApi } from '@/hooks/use-api'
 import { queryKeys } from '@/lib/query-keys'
-import type { JobTemplate, JobType, GitRepository, SavedInventory, CommandTemplate, CustomField } from '../types'
-import { STALE_TIME, EMPTY_TEMPLATES, EMPTY_TYPES, EMPTY_REPOS, EMPTY_INVENTORIES, EMPTY_CMD_TEMPLATES, EMPTY_CUSTOM_FIELDS } from '../utils/constants'
+import type { JobTemplate, JobType, GitRepository, CommandTemplate, CustomField } from '../types'
+import { STALE_TIME, EMPTY_TEMPLATES, EMPTY_TYPES, EMPTY_REPOS, EMPTY_CMD_TEMPLATES, EMPTY_CUSTOM_FIELDS } from '../utils/constants'
 
 interface UseQueryOptions {
   enabled?: boolean
@@ -70,24 +70,7 @@ export function useConfigRepos(options: UseQueryOptions = DEFAULT_OPTIONS) {
   })
 }
 
-/**
- * Fetch saved inventories
- * Replaces: fetchSavedInventories() (lines 249-271)
- */
-export function useSavedInventories(options: UseQueryOptions = DEFAULT_OPTIONS) {
-  const { apiCall } = useApi()
-  const { enabled = true } = options
-
-  return useQuery({
-    queryKey: queryKeys.jobs.savedInventories(),
-    queryFn: async () => {
-      const response = await apiCall<{ inventories: SavedInventory[] }>('/inventory', { method: 'GET' })
-      return response?.inventories || EMPTY_INVENTORIES
-    },
-    enabled,
-    staleTime: STALE_TIME.INVENTORIES,
-  })
-}
+// useSavedInventories removed - inventory feature no longer exists in scaffold
 
 /**
  * Fetch command templates

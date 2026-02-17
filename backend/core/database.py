@@ -3,7 +3,7 @@ Database connection and session management using SQLAlchemy with PostgreSQL.
 Replaces all SQLite-based database operations.
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from config import settings
 from typing import Generator
@@ -66,43 +66,37 @@ def get_db_session() -> Session:
 
 def init_db():
     """
-    Initialize database - create all tables and run automatic migrations.
+    Initialize database - create all tables from SQLAlchemy models.
     This should be called on application startup.
+    
+    This will create any missing tables but will NOT alter existing tables.
+    For schema migrations, use the migration system in migrations/ directory.
     """
     try:
-        logger.info("Initializing database tables...")
+        logger.info("Initializing database schema...")
 
         # Import all models to ensure they're registered with Base.metadata
-        # This is required for the migration system to work correctly
         from core import models  # noqa: F401
 
-        logger.info(f"Loaded {len(Base.metadata.tables)} model definitions")
+        logger.info(f"Loaded {len(Base.metadata.tables)} table definitions from models")
 
-        # Run automatic migrations using the migration runner
-        from migrations.runner import MigrationRunner
-
-        runner = MigrationRunner(engine, Base)
-        migration_results = runner.run_migrations()
-
-        # Log migration results
-        total_changes = (
-            migration_results.get("tables_created", 0)
-            + migration_results.get("columns_added", 0)
-            + migration_results.get("indexes_created", 0)
-        )
-
-        if total_changes > 0:
-            logger.info(
-                f"Database migration completed: "
-                f"{migration_results['tables_created']} tables created, "
-                f"{migration_results['columns_added']} columns added, "
-                f"{migration_results['indexes_created']} indexes created"
-            )
+        # Get inspector to check existing tables
+        inspector = inspect(engine)
+        existing_tables = set(inspector.get_table_names())
+        model_tables = set(Base.metadata.tables.keys())
+        
+        missing_tables = model_tables - existing_tables
+        
+        if missing_tables:
+            logger.info(f"Creating {len(missing_tables)} missing table(s): {', '.join(sorted(missing_tables))}")
+            # Create all tables defined in models (only missing ones will be created)
+            Base.metadata.create_all(bind=engine)
+            logger.info("✓ Database tables created successfully")
         else:
-            logger.info("Database schema is up to date - no migrations needed")
+            logger.info("✓ Database schema is up to date - all tables exist")
 
         logger.info(
-            f"Database initialized successfully ({len(Base.metadata.tables)} tables)"
+            f"Database initialized successfully ({len(model_tables)} tables total)"
         )
     except Exception as e:
         logger.error(f"Error initializing database: {e}")

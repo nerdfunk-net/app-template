@@ -23,6 +23,7 @@ import {
   Calendar,
   History,
   Server,
+  HelpCircle,
 } from 'lucide-react'
 
 interface NavItem {
@@ -57,14 +58,6 @@ const navigationSections: NavSection[] = [
     title: 'Settings',
     items: [
       { label: 'Common', href: '/settings/common', icon: Settings },
-      {
-        label: 'Templates',
-        icon: FileText,
-        children: [
-          { label: 'List & Import', href: '/settings/templates', icon: FileText },
-          { label: 'Editor', href: '/settings/templates/editor', icon: FileText },
-        ],
-      },
       { label: 'Git Management', href: '/settings/git', icon: GitBranch },
       { label: 'Cache', href: '/settings/cache', icon: Zap },
       { label: 'Celery', href: '/settings/celery', icon: Server },

@@ -80,19 +80,6 @@ const compareDevicesTemplateSchema = baseTemplateSchema.extend({
   path: ["inventory_name"]
 })
 
-// Cache Devices job type schema
-const cacheDevicesTemplateSchema = baseTemplateSchema.extend({
-  job_type: z.literal("cache_devices"),
-}).refine((data) => {
-  if (data.inventory_source === "inventory" && !data.inventory_name) {
-    return false
-  }
-  return true
-}, {
-  message: "Please select a saved inventory",
-  path: ["inventory_name"]
-})
-
 // Scan Prefixes job type schema (no inventory)
 const scanPrefixesTemplateSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -116,7 +103,6 @@ export const jobTemplateSchema = z.discriminatedUnion("job_type", [
   runCommandsTemplateSchema,
   syncDevicesTemplateSchema,
   compareDevicesTemplateSchema,
-  cacheDevicesTemplateSchema,
   scanPrefixesTemplateSchema,
 ])
 

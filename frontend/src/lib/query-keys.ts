@@ -43,7 +43,7 @@ export const queryKeys = {
       category
         ? ([...queryKeys.jobs.all, 'config-repos', category] as const)
         : ([...queryKeys.jobs.all, 'config-repos'] as const),
-    savedInventories: () => [...queryKeys.jobs.all, 'saved-inventories'] as const,
+    // savedInventories removed - inventory feature no longer exists
     commandTemplates: () => [...queryKeys.jobs.all, 'command-templates'] as const,
     customFields: (contentType?: string) =>
       contentType
@@ -64,6 +64,12 @@ export const queryKeys = {
     credentials: () => [...queryKeys.settings.all, 'credentials'] as const,
     git: () => [...queryKeys.settings.all, 'git'] as const,
     celery: () => [...queryKeys.settings.all, 'celery'] as const,
+  },
+
+  // Common Settings
+  commonSettings: {
+    all: ['commonSettings'] as const,
+    snmpMapping: () => [...queryKeys.commonSettings.all, 'snmpMapping'] as const,
   },
 
   // Celery

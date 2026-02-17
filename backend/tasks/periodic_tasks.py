@@ -73,70 +73,14 @@ def load_cache_schedules_task() -> dict:
         now = datetime.now(timezone.utc)
         dispatched = []
 
-        # Check devices cache
-        devices_interval = cache_settings.get("devices_cache_interval_minutes", 60)
-        if devices_interval > 0:
-            last_run = _last_cache_runs.get("devices")
-            if (
-                last_run is None
-                or (now - last_run).total_seconds() >= devices_interval * 60
-            ):
-                # Dispatch devices cache task with tracking
-                dispatch_cache_task.delay(
-                    cache_type="devices", task_name="cache_all_devices"
-                )
-                _last_cache_runs["devices"] = now
-                dispatched.append("devices")
-                logger.info(
-                    f"Dispatched devices cache task (interval: {devices_interval}m)"
-                )
-
-        # Check locations cache
-        locations_interval = cache_settings.get("locations_cache_interval_minutes", 10)
-        if locations_interval > 0:
-            last_run = _last_cache_runs.get("locations")
-            if (
-                last_run is None
-                or (now - last_run).total_seconds() >= locations_interval * 60
-            ):
-                # Dispatch locations cache task with tracking
-                dispatch_cache_task.delay(
-                    cache_type="locations", task_name="cache_all_locations"
-                )
-                _last_cache_runs["locations"] = now
-                dispatched.append("locations")
-                logger.info(
-                    f"Dispatched locations cache task (interval: {locations_interval}m)"
-                )
-
-        # Check git commits cache (placeholder for future implementation)
-        git_interval = cache_settings.get("git_commits_cache_interval_minutes", 15)
-        if git_interval > 0:
-            last_run = _last_cache_runs.get("git_commits")
-            if (
-                last_run is None
-                or (now - last_run).total_seconds() >= git_interval * 60
-            ):
-                # TODO: Dispatch git commits cache task when implemented
-                # dispatch_cache_task.delay(
-                #     cache_type='git_commits',
-                #     task_name='cache_git_commits'
-                # )
-                _last_cache_runs["git_commits"] = now
-                # dispatched.append('git_commits')
-                logger.debug(
-                    f"Git commits cache task not yet implemented (interval: {git_interval}m)"
-                )
+        # Placeholder for future cache tasks
+        # Add your cache scheduling logic here
+        logger.debug("Cache schedules check completed (no tasks configured)")
 
         return {
             "success": True,
             "checked_at": now.isoformat(),
             "dispatched": dispatched,
-            "intervals": {
-                "devices": devices_interval,
-                "locations": locations_interval,
-                "git_commits": git_interval,
-            },
         }
 
     except Exception as e:
@@ -168,34 +112,12 @@ def dispatch_cache_task(self, cache_type: str, task_name: str) -> dict:
         job_run_manager.mark_started(job_run_id, self.request.id)
 
         try:
-            # Execute the actual cache task using .apply() to get a proper task context
-            # This runs synchronously but gives the task access to self.request.id
-            if task_name == "cache_all_devices":
-                from services.background_jobs import cache_all_devices_task
-
-                async_result = cache_all_devices_task.apply()
-                result = (
-                    async_result.result
-                    if async_result.successful()
-                    else {"status": "failed", "error": str(async_result.result)}
-                )
-            elif task_name == "cache_all_locations":
-                from services.background_jobs import cache_all_locations_task
-
-                async_result = cache_all_locations_task.apply()
-                result = (
-                    async_result.result
-                    if async_result.successful()
-                    else {"status": "failed", "error": str(async_result.result)}
-                )
-            elif task_name == "cache_git_commits":
-                # Placeholder for git commits cache
-                result = {
-                    "status": "not_implemented",
-                    "message": "Git commits cache not yet implemented",
-                }
-            else:
-                result = {"status": "error", "message": f"Unknown task: {task_name}"}
+            # Placeholder for cache task execution
+            # Add your cache task logic here when needed
+            result = {
+                "status": "not_implemented",
+                "message": f"Cache task '{task_name}' not yet implemented",
+            }
 
             # Check result status
             status = result.get("status", "completed")

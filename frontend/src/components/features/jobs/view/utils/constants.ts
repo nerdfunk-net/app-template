@@ -16,7 +16,6 @@ export const STATUS_OPTIONS: readonly FilterOption[] = [
 
 export const JOB_TYPE_OPTIONS: readonly FilterOption[] = [
   { value: "backup", label: "Backup" },
-  { value: "cache_devices", label: "Cache Devices" },
   { value: "cache_locations", label: "Cache Locations" },
   { value: "cache_git_commits", label: "Cache Git Commits" },
   { value: "sync_devices", label: "Sync Devices" },

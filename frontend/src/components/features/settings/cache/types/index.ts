@@ -1,17 +1,6 @@
 export interface CacheSettings {
   enabled: boolean
   ttl_seconds: number
-  prefetch_on_startup: boolean
-  refresh_interval_minutes: number
-  max_commits: number
-  prefetch_items?: {
-    git?: boolean
-    locations?: boolean
-    devices?: boolean
-  }
-  devices_cache_interval_minutes?: number
-  locations_cache_interval_minutes?: number
-  git_commits_cache_interval_minutes?: number
 }
 
 export interface CacheStats {

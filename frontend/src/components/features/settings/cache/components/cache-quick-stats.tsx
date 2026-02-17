@@ -29,17 +29,13 @@ export function CacheQuickStats({ hasChanges = false }: CacheQuickStatsProps) {
         <CardContent className="space-y-3">
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600">Cache Status:</span>
-            <span className={`font-medium ${settings.enabled ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`font-medium ${ settings.enabled ? 'text-green-600' : 'text-red-600'}`}>
               {settings.enabled ? 'Enabled' : 'Disabled'}
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600">TTL:</span>
             <span className="font-medium">{settings.ttl_seconds}s</span>
-          </div>
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Max Commits:</span>
-            <span className="font-medium">{settings.max_commits}</span>
           </div>
 
           {stats && (
