@@ -33,7 +33,7 @@ async def list_job_runs(
     template_id: Optional[str] = Query(
         None, description="Filter by template ID (comma-separated for multiple)"
     ),
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     List job runs with pagination and optional filters.
@@ -75,7 +75,7 @@ async def list_job_runs(
 
 @router.get("/templates")
 async def get_distinct_templates(
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get distinct templates used in job runs (for filter dropdown).
@@ -93,7 +93,7 @@ async def get_recent_runs(
     limit: int = Query(50, ge=1, le=200, description="Number of runs to return"),
     status: Optional[str] = Query(None, description="Filter by status"),
     job_type: Optional[str] = Query(None, description="Filter by job type"),
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get recent job runs (simplified endpoint for dashboard).
@@ -110,7 +110,7 @@ async def get_recent_runs(
 
 @router.get("/stats")
 async def get_job_stats(
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get job queue statistics.
@@ -127,7 +127,7 @@ async def get_job_stats(
 
 @router.get("/dashboard/stats")
 async def get_dashboard_stats(
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get dashboard statistics for job runs.
@@ -146,7 +146,7 @@ async def get_dashboard_stats(
 
 @router.get("/dashboard/compare-devices")
 async def get_latest_compare_devices_result(
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get the latest compare_devices job result for dashboard.
@@ -196,7 +196,7 @@ async def get_latest_compare_devices_result(
 
 @router.get("/dashboard/scan-prefix")
 async def get_latest_scan_prefix_result(
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get the latest scan_prefix job result for dashboard.
@@ -331,7 +331,7 @@ async def get_latest_scan_prefix_result(
 
 @router.get("/{run_id}", response_model=JobRunResponse)
 async def get_job_run(
-    run_id: int, current_user: dict = Depends(require_permission("jobs", "read"))
+    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "read"))
 ):
     """
     Get a specific job run by ID.
@@ -350,7 +350,7 @@ async def get_job_run(
 
 @router.get("/{run_id}/progress")
 async def get_job_progress(
-    run_id: int, current_user: dict = Depends(require_permission("jobs", "read"))
+    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "read"))
 ):
     """
     Get progress information for a running backup job.
@@ -416,7 +416,7 @@ async def get_job_progress(
 async def get_schedule_runs(
     schedule_id: int,
     limit: int = Query(50, ge=1, le=200, description="Number of runs to return"),
-    current_user: dict = Depends(require_permission("jobs", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get job runs for a specific schedule.
@@ -433,7 +433,7 @@ async def get_schedule_runs(
 
 @router.post("/{run_id}/cancel")
 async def cancel_job_run(
-    run_id: int, current_user: dict = Depends(require_permission("jobs", "write"))
+    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
 ):
     """
     Cancel a pending or running job.
@@ -478,7 +478,7 @@ async def cleanup_old_runs(
     days: int = Query(
         30, ge=1, le=365, description="Delete runs older than this many days"
     ),
-    current_user: dict = Depends(require_permission("jobs", "delete")),
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Clean up old job runs (admin only).
@@ -493,7 +493,7 @@ async def cleanup_old_runs(
 
 @router.delete("/clear-all")
 async def clear_all_runs(
-    current_user: dict = Depends(require_permission("jobs", "write")),
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Clear all job run history.
@@ -520,7 +520,7 @@ async def clear_filtered_runs(
     template_id: Optional[str] = Query(
         None, description="Filter by template ID (comma-separated for multiple)"
     ),
-    current_user: dict = Depends(require_permission("jobs", "write")),
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Clear job runs matching the specified filters.
@@ -571,7 +571,7 @@ async def clear_filtered_runs(
 
 @router.delete("/{run_id}")
 async def delete_job_run(
-    run_id: int, current_user: dict = Depends(require_permission("jobs", "write"))
+    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
 ):
     """
     Delete a single job run from history.
@@ -603,7 +603,7 @@ async def delete_job_run(
 
 @router.post("/execute/{schedule_id}")
 async def execute_job_manually(
-    schedule_id: int, current_user: dict = Depends(require_permission("jobs", "write"))
+    schedule_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
 ):
     """
     Execute a job schedule manually (trigger immediate run).
