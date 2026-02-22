@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('Login successful, returning response with enhanced security')
-
     // Return the successful response - let client handle cookies for now
     // This maintains compatibility with existing auth flow
     return NextResponse.json(responseData, {
