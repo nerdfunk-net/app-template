@@ -23,8 +23,7 @@ from sqlalchemy import delete
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -32,28 +31,28 @@ logger = logging.getLogger(__name__)
 def clean_job_templates(create_example: bool = True) -> None:
     """
     Remove all job templates and optionally create an example template.
-    
+
     Args:
         create_example: If True, create one empty example template
     """
     logger.info("Starting job templates cleanup...")
-    
+
     with get_db_session() as db:
         try:
             # First delete all job schedules (they reference job templates)
             schedules_result = db.execute(delete(JobSchedule))
             schedules_count = schedules_result.rowcount
             logger.info(f"Deleted {schedules_count} job schedules")
-            
+
             # Delete all job templates
             templates_result = db.execute(delete(JobTemplate))
             templates_count = templates_result.rowcount
             logger.info(f"Deleted {templates_count} job templates")
-            
+
             # Commit deletions
             db.commit()
             logger.info("✓ All job templates and schedules removed")
-            
+
             # Create example template if requested
             if create_example:
                 example_template = JobTemplate(
@@ -66,18 +65,18 @@ def clean_job_templates(create_example: bool = True) -> None:
                     parallel_tasks=1,
                     is_global=True,  # Make it visible to all users
                 )
-                
+
                 db.add(example_template)
                 db.commit()
                 db.refresh(example_template)
-                
+
                 logger.info(f"✓ Created example template (ID: {example_template.id})")
                 logger.info(f"  Name: {example_template.name}")
                 logger.info(f"  Type: {example_template.job_type}")
                 logger.info(f"  Description: {example_template.description}")
-            
+
             logger.info("\n✓ Job templates cleanup completed successfully")
-            
+
         except Exception as e:
             logger.error(f"Error cleaning job templates: {e}")
             db.rollback()
@@ -86,18 +85,14 @@ def clean_job_templates(create_example: bool = True) -> None:
 
 if __name__ == "__main__":
     import argparse
-    
-    parser = argparse.ArgumentParser(
-        description="Clean job templates database"
-    )
+
+    parser = argparse.ArgumentParser(description="Clean job templates database")
     parser.add_argument(
-        '--no-example',
-        action='store_true',
-        help='Do not create example template'
+        "--no-example", action="store_true", help="Do not create example template"
     )
-    
+
     args = parser.parse_args()
-    
+
     try:
         clean_job_templates(create_example=not args.no_example)
     except Exception as e:

@@ -433,7 +433,8 @@ async def get_schedule_runs(
 
 @router.post("/{run_id}/cancel")
 async def cancel_job_run(
-    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
+    run_id: int,
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Cancel a pending or running job.
@@ -571,7 +572,8 @@ async def clear_filtered_runs(
 
 @router.delete("/{run_id}")
 async def delete_job_run(
-    run_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
+    run_id: int,
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Delete a single job run from history.
@@ -603,7 +605,8 @@ async def delete_job_run(
 
 @router.post("/execute/{schedule_id}")
 async def execute_job_manually(
-    schedule_id: int, current_user: dict = Depends(require_permission("jobs.runs", "execute"))
+    schedule_id: int,
+    current_user: dict = Depends(require_permission("jobs.runs", "execute")),
 ):
     """
     Execute a job schedule manually (trigger immediate run).

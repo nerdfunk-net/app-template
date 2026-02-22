@@ -2,6 +2,14 @@
 Base repository with common CRUD operations.
 
 This provides a generic base class that other repositories can extend.
+
+NOTE: Each repository method currently opens and closes its own DB session.
+This means multiple repository calls within one request use separate connections
+(no cross-repository transaction isolation) and lazy-loaded relationships will
+fail after the session closes.  The recommended improvement is to inject a
+request-scoped session via FastAPI's Depends(get_db) and pass it through the
+repository constructor — see the CODE_ANALYSIS.md section 3.3 for the pattern.
+That refactor is deferred to post-launch due to the scope of changes required.
 """
 
 from typing import Generic, TypeVar, Type, List, Optional

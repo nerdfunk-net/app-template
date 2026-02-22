@@ -68,7 +68,7 @@ def init_db():
     """
     Initialize database - create all tables from SQLAlchemy models.
     This should be called on application startup.
-    
+
     This will create any missing tables but will NOT alter existing tables.
     For schema migrations, use the migration system in migrations/ directory.
     """
@@ -84,11 +84,13 @@ def init_db():
         inspector = inspect(engine)
         existing_tables = set(inspector.get_table_names())
         model_tables = set(Base.metadata.tables.keys())
-        
+
         missing_tables = model_tables - existing_tables
-        
+
         if missing_tables:
-            logger.info(f"Creating {len(missing_tables)} missing table(s): {', '.join(sorted(missing_tables))}")
+            logger.info(
+                f"Creating {len(missing_tables)} missing table(s): {', '.join(sorted(missing_tables))}"
+            )
             # Create all tables defined in models (only missing ones will be created)
             Base.metadata.create_all(bind=engine)
             logger.info("✓ Database tables created successfully")

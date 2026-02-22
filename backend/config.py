@@ -3,6 +3,7 @@ Manual configuration module for Cockpit backend.
 Simple approach without complex pydantic parsing.
 """
 
+import logging
 import os
 from dotenv import load_dotenv
 
@@ -133,6 +134,21 @@ class Settings:
 
 # Global settings instance
 settings = Settings()
+
+_config_logger = logging.getLogger(__name__)
+
+_DEFAULT_SECRET_KEY = "your-secret-key-change-in-production"
+if settings.secret_key == _DEFAULT_SECRET_KEY:
+    raise RuntimeError(
+        "FATAL: SECRET_KEY must be changed before running the application. "
+        "Set the SECRET_KEY environment variable to a strong random value (min 32 chars)."
+    )
+
+if settings.initial_username == "admin" and settings.initial_password == "admin":
+    _config_logger.warning(
+        "WARNING: Default admin credentials (admin/admin) are in use. "
+        "Change INITIAL_USERNAME and INITIAL_PASSWORD before production deployment."
+    )
 
 if __name__ == "__main__":
     print("Cockpit Backend Configuration:")

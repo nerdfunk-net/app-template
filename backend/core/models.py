@@ -14,7 +14,6 @@ from sqlalchemy import (
     UniqueConstraint,
     Index,
     LargeBinary,
-    JSON,
 )
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
@@ -791,5 +790,3 @@ class AuditLog(Base):
         Index("idx_audit_logs_resource", "resource_type", "resource_id"),
         Index("idx_audit_logs_severity", "severity"),
     )
-
-

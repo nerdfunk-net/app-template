@@ -12,6 +12,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, For
 import { useCacheSettings } from '../hooks/use-cache-queries'
 import { useCacheMutations } from '../hooks/use-cache-mutations'
 import { useEffect } from 'react'
+import type { CacheSettings } from '../types'
 
 const cacheSettingsSchema = z.object({
   enabled: z.boolean(),
@@ -44,7 +45,7 @@ export function CacheSettingsForm() {
 
   const handleSubmit = form.handleSubmit((data) => {
     // Send only the two fields, backend will handle defaults for others
-    saveSettings.mutate(data as any)
+    saveSettings.mutate(data as CacheSettings)
   })
 
   if (isLoading) {

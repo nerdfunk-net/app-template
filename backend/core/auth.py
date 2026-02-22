@@ -72,11 +72,10 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) 
 
 def verify_admin_token(user_info: dict = Depends(verify_token)) -> dict:
     """Verify token and ensure user has admin permissions."""
-    from user_db_manager import PERMISSIONS_ADMIN
+    from user_db_manager import PERMISSION_ADMIN
 
-    # Check if user has full admin permissions (exact match)
     user_permissions = user_info["permissions"]
-    if user_permissions != PERMISSIONS_ADMIN:
+    if not (user_permissions & PERMISSION_ADMIN):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"
         )
@@ -94,37 +93,21 @@ def verify_api_key(x_api_key: Optional[str] = None) -> dict:
             headers={"WWW-Authenticate": "ApiKey"},
         )
 
-    # Search for user with matching API key
-    import sqlite3
-    from config import settings as config_settings
-    import os
-
-    db_path = os.path.join(
-        config_settings.data_directory, "settings", "cockpit_settings.db"
-    )
-
     try:
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
+        from repositories.auth.profile_repository import ProfileRepository
+        from services.auth.user_management import get_user_by_username
 
-        user_row = conn.execute(
-            "SELECT username FROM user_profiles WHERE api_key = ? AND api_key IS NOT NULL",
-            (x_api_key,),
-        ).fetchone()
+        profile_repo = ProfileRepository()
+        profile = profile_repo.get_by_api_key(x_api_key)
 
-        conn.close()
-
-        if not user_row:
+        if not profile:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid API key",
                 headers={"WWW-Authenticate": "ApiKey"},
             )
 
-        # Get user details from user management system
-        from services.user_management import get_user_by_username
-
-        user = get_user_by_username(user_row["username"])
+        user = get_user_by_username(profile.username)
 
         if not user or not user.get("is_active", False):
             raise HTTPException(
