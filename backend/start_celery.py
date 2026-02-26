@@ -134,6 +134,7 @@ def install_certificates():
             capture_output=True,
             text=True,
             timeout=60,
+            check=False,
         )
         if result.returncode == 0:
             print(f"  Successfully installed {copied_count} certificate(s)")

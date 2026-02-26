@@ -174,6 +174,7 @@ class GitCacheService:
             List of commit dictionaries
         """
         try:
+            # Use -- to prevent branch_name from being parsed as command options
             log = subprocess.run(
                 [
                     "git",
@@ -182,12 +183,14 @@ class GitCacheService:
                     str(limit),
                     "--date=iso",
                     "--format=%H|%s|%an|%ae|%ad",
+                    "--",
                     branch_name,
                 ],
                 cwd=repo_path,
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
 
             commits = []

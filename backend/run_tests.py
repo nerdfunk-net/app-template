@@ -36,7 +36,7 @@ def run_tests(test_type: str = "all", coverage: bool = True):
         cmd.extend(["--no-cov"])
 
     # Run pytest
-    result = subprocess.run(cmd, cwd=Path(__file__).parent)
+    result = subprocess.run(cmd, cwd=Path(__file__).parent, check=False)
 
     if result.returncode == 0:
         print("\n✅ All tests passed!")

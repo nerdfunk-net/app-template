@@ -323,4 +323,4 @@ if __name__ == "__main__":
     import uvicorn
     from config import settings
 
-    uvicorn.run(app, host="0.0.0.0", port=settings.port)
+    uvicorn.run(app, host="127.0.0.1", port=settings.port)

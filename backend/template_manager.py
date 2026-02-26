@@ -333,7 +333,7 @@ class TemplateManager:
                 raise ValueError(f"Template content not found for '{template_name}'")
 
             # Create Jinja2 template and render
-            env = Environment(loader=BaseLoader())
+            env = Environment(loader=BaseLoader(), autoescape=True)
             jinja_template = env.from_string(content)
             rendered = jinja_template.render(**data)
 
