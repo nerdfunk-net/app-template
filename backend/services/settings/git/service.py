@@ -170,7 +170,8 @@ class GitService:
             # Validate remote URL if present
             try:
                 current_remote = repo.remotes.origin.url if repo.remotes else None
-            except Exception:
+            except Exception as e:
+                logger.debug("Could not get current remote: %s", e)
                 current_remote = None
 
             if expected_url_norm and current_remote:
@@ -184,7 +185,11 @@ class GitService:
                     raise InvalidGitRepositoryError("URL mismatch, need to re-clone")
 
             return repo
-        except Exception:
+        except InvalidGitRepositoryError as e:
+            logger.info("Invalid repository, cloning fresh: %s", e)
+            return self._clone_fresh(repository, repo_dir)
+        except Exception as e:
+            logger.warning("Unexpected error opening repo %s: %s", repo_dir, e)
             return self._clone_fresh(repository, repo_dir)
 
     def clone(
@@ -258,8 +263,8 @@ class GitService:
             try:
                 if target_path.exists():
                     shutil.rmtree(target_path)
-            except Exception:
-                pass
+            except Exception as cleanup_error:
+                logger.warning("Failed to clean up clone dir %s: %s", target_path, cleanup_error)
             raise
 
     def pull(self, repository: Dict, repo: Optional[Repo] = None) -> PullResult:
@@ -401,8 +406,8 @@ class GitService:
                         if original_url:
                             try:
                                 origin.set_url(original_url)
-                            except Exception:
-                                pass
+                            except Exception as e:
+                                logger.warning("Failed to restore original URL: %s", e)
 
         except GitCommandError as e:
             err_str = str(e)
@@ -636,8 +641,8 @@ class GitService:
                         if original_url:
                             try:
                                 origin.set_url(original_url)
-                            except Exception:
-                                pass
+                            except Exception as e:
+                                logger.warning("Failed to restore original URL: %s", e)
 
         except Exception as e:
             logger.error("Fetch failed: %s", e)

@@ -439,8 +439,8 @@ async def debug_push_test(
                             if auth_type != "ssh_key" and original_url:
                                 try:
                                     origin.set_url(original_url)
-                                except Exception:
-                                    pass  # Best effort to clean up
+                                except Exception as e:
+                                    logger.warning("Failed to restore original URL: %s", e)
 
                             # Check push result
                             if push_info and len(push_info) > 0:
@@ -489,8 +489,8 @@ async def debug_push_test(
                             if auth_type != "ssh_key" and original_url:
                                 try:
                                     origin.set_url(original_url)
-                                except Exception:
-                                    pass
+                                except Exception as e:
+                                    logger.warning("Failed to restore original URL on push error: %s", e)
 
                             error_message = str(push_error)
 
@@ -696,8 +696,8 @@ async def debug_diagnostics(
                     has_remote = True
                     origin = repo.remote("origin")
                     remote_url = list(origin.urls)[0] if origin.urls else "unknown"
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("Failed to check remote origin: %s", e)
 
             # Determine push capability status
             if has_credentials and has_remote:

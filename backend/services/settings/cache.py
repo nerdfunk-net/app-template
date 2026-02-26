@@ -196,8 +196,8 @@ class RedisCacheService:
                     mem = self._redis.memory_usage(key)
                     if mem:
                         total_size += mem
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to get memory usage for key: %s", e)
 
             # Group by namespace
             namespaces = {}
@@ -219,8 +219,8 @@ class RedisCacheService:
                     mem = self._redis.memory_usage(key)
                     if mem:
                         namespaces[namespace]["size_bytes"] += mem
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to get memory usage for key: %s", e)
 
             # Calculate hit rate
             total_requests = hits + misses
@@ -301,7 +301,8 @@ class RedisCacheService:
                 # Get memory usage
                 try:
                     size_bytes = self._redis.memory_usage(redis_key) or 0
-                except Exception:
+                except Exception as e:
+                    logger.debug("Failed to get memory usage: %s", e)
                     size_bytes = 0
 
                 entries.append(
@@ -362,7 +363,8 @@ class RedisCacheService:
                 try:
                     size_bytes = self._redis.memory_usage(redis_key) or 0
                     total_size += size_bytes
-                except Exception:
+                except Exception as e:
+                    logger.debug("Failed to get memory usage: %s", e)
                     size_bytes = 0
 
                 entries.append(
