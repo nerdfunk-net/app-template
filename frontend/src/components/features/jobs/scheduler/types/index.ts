@@ -25,7 +25,6 @@ export interface JobTemplate {
   name: string
   job_type: string
   description?: string
-  inventory_source: string
   is_global: boolean
   user_id?: number
   created_by?: string

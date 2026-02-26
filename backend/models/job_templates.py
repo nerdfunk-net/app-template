@@ -10,9 +10,6 @@ from datetime import datetime
 # Valid job template types
 JobTemplateType = Literal["example"]
 
-# Inventory source options
-InventorySource = Literal["all", "inventory"]
-
 
 class JobTemplateBase(BaseModel):
     """Base model for job templates"""
@@ -25,9 +22,6 @@ class JobTemplateBase(BaseModel):
     )
     description: Optional[str] = Field(
         None, max_length=1000, description="Description of what this template does"
-    )
-    inventory_source: InventorySource = Field(
-        "all", description="Whether to use all devices or a stored inventory"
     )
     is_global: bool = Field(
         False,
@@ -46,7 +40,6 @@ class JobTemplateUpdate(BaseModel):
 
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = Field(None, max_length=1000)
-    inventory_source: Optional[InventorySource] = None
     is_global: Optional[bool] = None
 
 

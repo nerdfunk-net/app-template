@@ -61,7 +61,6 @@ export function TemplateFormDialog({
       job_type: formJobType,
       description: formDescription || undefined,
       is_global: formIsGlobal,
-      inventory_source: "all" as const, // Default for simplified example type
     }
 
     if (editingTemplate) {

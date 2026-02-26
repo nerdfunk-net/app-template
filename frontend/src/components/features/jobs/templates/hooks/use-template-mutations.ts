@@ -91,7 +91,6 @@ export function useTemplateMutations() {
         name: `copy_of_${template.name}`,
         job_type: template.job_type,
         description: template.description || undefined,
-        inventory_source: template.inventory_source,
         is_global: template.is_global,
       }
 

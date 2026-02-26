@@ -50,7 +50,6 @@ def dispatch_job(
     """
     import job_run_manager
     import job_template_manager
-    from tasks.utils.device_helpers import get_target_devices
     from tasks.execution.base_executor import execute_job_type
 
     job_run = None
@@ -69,12 +68,6 @@ def dispatch_job(
             )
             if template:
                 logger.info("[DISPATCH] Template name: %s", template.get('name'))
-                logger.info(
-                    "[DISPATCH] Template activate_changes_after_sync: %s", template.get('activate_changes_after_sync')
-                )
-                if not target_devices:
-                    # Get target devices based on inventory_source
-                    target_devices = get_target_devices(template, job_parameters)
         else:
             logger.info("[DISPATCH] No template_id provided")
 
