@@ -26,9 +26,6 @@ export interface JobTemplate {
   job_type: string
   description?: string
   inventory_source: string
-  inventory_repository_id?: number
-  inventory_name?: string
-  command_template_name?: string
   is_global: boolean
   user_id?: number
   created_by?: string

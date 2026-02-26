@@ -1,11 +1,10 @@
 """
 Base executor and job type dispatcher.
-Routes job execution to appropriate executor based on job type.
-
-Moved from job_tasks.py to improve code organization.
+Routes job execution to the appropriate executor based on job type.
 """
 
 import logging
+import time
 from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
@@ -33,29 +32,14 @@ def execute_job_type(
         job_parameters: Additional job parameters
         target_devices: List of target device UUIDs
         task_context: Celery task context (self)
-        template: Job template configuration (for settings like activate_changes_after_sync)
+        template: Job template configuration
         job_run_id: Job run ID for result tracking
 
     Returns:
         dict: Execution results
     """
-    from .cache_executor import execute_cache_devices
-    from .sync_executor import execute_sync_devices
-    from .backup_executor import execute_backup
-    from .command_executor import execute_run_commands
-    from .compare_executor import execute_compare_devices
-    from .scan_prefixes_executor import execute_scan_prefixes
-    from .deploy_agent_executor import execute_deploy_agent
-
-    # Map job_type to execution function
     job_executors = {
-        "cache_devices": execute_cache_devices,
-        "sync_devices": execute_sync_devices,
-        "backup": execute_backup,
-        "run_commands": execute_run_commands,
-        "compare_devices": execute_compare_devices,
-        "scan_prefixes": execute_scan_prefixes,
-        "deploy_agent": execute_deploy_agent,
+        "example": execute_example,
     }
 
     executor = job_executors.get(job_type)
@@ -71,3 +55,45 @@ def execute_job_type(
         template=template,
         job_run_id=job_run_id,
     )
+
+
+def execute_example(
+    schedule_id: Optional[int] = None,
+    credential_id: Optional[int] = None,
+    job_parameters: Optional[dict] = None,
+    target_devices: Optional[list] = None,
+    task_context=None,
+    template: Optional[dict] = None,
+    job_run_id: Optional[int] = None,
+) -> Dict[str, Any]:
+    """
+    Example job executor - demonstrates how to implement a job type.
+
+    This is a template for creating real job executors. Replace this
+    with actual business logic as needed.
+
+    Args:
+        schedule_id: ID of the triggering schedule
+        credential_id: ID of credential (unused in example)
+        job_parameters: Additional parameters from the schedule
+        target_devices: List of target device identifiers
+        task_context: Celery task context for progress updates
+        template: Job template configuration
+        job_run_id: Job run ID for tracking
+
+    Returns:
+        dict: Execution results with success status
+    """
+    logger.info("Running example job (schedule_id=%s, job_run_id=%s)", schedule_id, job_run_id)
+
+    # Simulate some work
+    time.sleep(2)
+
+    return {
+        "success": True,
+        "message": "Example job completed successfully",
+        "schedule_id": schedule_id,
+        "job_run_id": job_run_id,
+        "job_parameters": job_parameters or {},
+        "target_devices": target_devices or [],
+    }

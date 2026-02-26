@@ -9,29 +9,16 @@ export const EMPTY_CMD_TEMPLATES: CommandTemplate[] = []
 export const EMPTY_CUSTOM_FIELDS: CustomField[] = []
 
 export const JOB_TYPE_LABELS: Record<string, string> = {
-  backup: 'Backup',
-  compare_devices: 'Compare Devices',
-  run_commands: 'Run Commands',
-  sync_devices: 'Sync Devices',
-  scan_prefixes: 'Scan Prefixes',
-  deploy_agent: 'Deploy Agent',
+  example: 'Example',
 } as const
 
 export const JOB_TYPE_COLORS: Record<string, string> = {
-  backup: 'bg-blue-500',
-  compare_devices: 'bg-purple-500',
-  run_commands: 'bg-green-500',
-  sync_devices: 'bg-orange-500',
-  scan_prefixes: 'bg-purple-500',
-  deploy_agent: 'bg-teal-500',
+  example: 'bg-slate-500',
 } as const
 
 export const DEFAULT_TEMPLATE: Partial<JobTemplate> = {
   inventory_source: 'all',
   is_global: false,
-  parallel_tasks: 1,
-  activate_changes_after_sync: true,
-  scan_resolve_dns: false,
 } as const
 
 export const STALE_TIME = {

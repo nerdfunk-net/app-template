@@ -267,6 +267,9 @@ async def execute_job(
     The actual Celery task execution will be implemented separately.
     """
     try:
+        import job_template_manager
+        from tasks.scheduling.job_dispatcher import dispatch_job
+
         # Get the job schedule
         job = jobs_manager.get_job_schedule(execution_request.job_schedule_id)
 
@@ -282,53 +285,45 @@ async def execute_job(
                 detail="Access denied: You cannot execute this private job",
             )
 
-        # Get the task for this job type
-        from tasks.job_tasks import get_task_for_job
-
-        task_func = get_task_for_job(job.get("job_identifier"))
-
-        if not task_func:
+        # Get the template for this schedule
+        template_id = job.get("job_template_id")
+        if not template_id:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"No task implementation found for job type: {job.get('job_identifier')}",
+                detail="Schedule has no associated template. Please edit the schedule and select a job template.",
             )
 
-        # Prepare task parameters
-        task_kwargs = {
-            "job_schedule_id": execution_request.job_schedule_id,
-        }
+        template = job_template_manager.get_job_template(template_id)
+        if not template:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Template {template_id} not found",
+            )
 
-        # Add credential_id if present
-        if job.get("credential_id"):
-            task_kwargs["credential_id"] = job.get("credential_id")
+        # Merge job parameters with any overrides from the request
+        job_parameters = {**(job.get("job_parameters") or {}), **(execution_request.override_parameters or {})}
 
-        # Add any additional job parameters
-        if job.get("job_parameters"):
-            task_kwargs.update(job.get("job_parameters"))
-
-        # Override with execution request parameters if provided
-        if execution_request.override_parameters:
-            task_kwargs.update(execution_request.override_parameters)
-
-        # Execute the Celery task
-        celery_task = task_func.delay(**task_kwargs)
+        # Dispatch the job
+        celery_task = dispatch_job.delay(
+            schedule_id=execution_request.job_schedule_id,
+            template_id=template_id,
+            job_name=job.get("job_identifier", f"manual-{execution_request.job_schedule_id}"),
+            job_type=template.get("job_type"),
+            credential_id=job.get("credential_id"),
+            job_parameters=job_parameters,
+            triggered_by="manual",
+            executed_by=current_user.get("username", "unknown"),
+        )
 
         logger.info(
             "Job execution started: %s (Celery task ID: %s) by user %s",
-            job.get("job_name"), celery_task.id, current_user["username"]
-        )
-
-        # Update last_run timestamp
-        from datetime import datetime
-
-        jobs_manager.update_job_run_times(
-            execution_request.job_schedule_id, last_run=datetime.now()
+            job.get("job_identifier"), celery_task.id, current_user["username"]
         )
 
         return {
             "message": "Job execution started",
             "job_id": execution_request.job_schedule_id,
-            "job_name": job.get("job_name"),
+            "job_name": job.get("job_identifier"),
             "celery_task_id": celery_task.id,
             "status": "queued",
         }

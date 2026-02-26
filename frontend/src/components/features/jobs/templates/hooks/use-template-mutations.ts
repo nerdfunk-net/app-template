@@ -91,26 +91,8 @@ export function useTemplateMutations() {
         name: `copy_of_${template.name}`,
         job_type: template.job_type,
         description: template.description || undefined,
-        config_repository_id: template.config_repository_id || undefined,
         inventory_source: template.inventory_source,
-        inventory_name: template.inventory_name || undefined,
-        command_template_name: template.command_template_name || undefined,
-        backup_running_config_path: template.backup_running_config_path || undefined,
-        backup_startup_config_path: template.backup_startup_config_path || undefined,
-        write_timestamp_to_custom_field: template.write_timestamp_to_custom_field,
-        timestamp_custom_field_name: template.timestamp_custom_field_name || undefined,
-        parallel_tasks: template.parallel_tasks || 1,
-        activate_changes_after_sync: template.activate_changes_after_sync,
-        scan_resolve_dns: template.scan_resolve_dns,
-        scan_ping_count: template.scan_ping_count,
-        scan_timeout_ms: template.scan_timeout_ms,
-        scan_retries: template.scan_retries,
-        scan_interval_ms: template.scan_interval_ms,
-        scan_custom_field_name: template.scan_custom_field_name || undefined,
-        scan_custom_field_value: template.scan_custom_field_value || undefined,
-        scan_response_custom_field_name: template.scan_response_custom_field_name || undefined,
-        scan_max_ips: template.scan_max_ips,
-        is_global: template.is_global
+        is_global: template.is_global,
       }
 
       return apiCall<JobTemplate>('/api/job-templates', {

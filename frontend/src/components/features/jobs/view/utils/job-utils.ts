@@ -15,13 +15,6 @@ export function hasActiveJobs(jobs: JobRun[]): boolean {
 }
 
 /**
- * Check if job is a backup job
- */
-export function isBackupJob(jobType: string): boolean {
-  return jobType.toLowerCase() === 'backup'
-}
-
-/**
  * Get badge CSS classes for job status
  */
 export function getStatusBadgeClasses(status: string): string {

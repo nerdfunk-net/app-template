@@ -3,7 +3,7 @@ import { useApi } from '@/hooks/use-api'
 import { queryKeys } from '@/lib/query-keys'
 import type { JobRun, JobProgressResponse } from '../types'
 import { STALE_TIME, PROGRESS_POLL_INTERVAL } from '../utils/constants'
-import { isJobActive, isBackupJob } from '../utils/job-utils'
+import { isJobActive } from '../utils/job-utils'
 
 interface UseJobProgressQueryOptions {
   enabled?: boolean
@@ -12,11 +12,9 @@ interface UseJobProgressQueryOptions {
 const DEFAULT_OPTIONS: UseJobProgressQueryOptions = { enabled: true }
 
 /**
- * Fetch progress for a specific backup job
- * CRITICAL: Uses TanStack Query refetchInterval to replace manual setInterval polling (lines 294-347)
- *
- * Only enabled for running backup jobs
- * Auto-stops polling when job completes
+ * Fetch progress for a specific job
+ * Only enabled for actively running jobs.
+ * Auto-stops polling when job completes.
  */
 export function useJobProgressQuery(
   job: JobRun | null,
@@ -25,12 +23,7 @@ export function useJobProgressQuery(
   const { apiCall } = useApi()
   const { enabled = true } = options
 
-  const shouldPoll = !!(
-    job &&
-    enabled &&
-    isJobActive(job.status) &&
-    isBackupJob(job.job_type)
-  )
+  const shouldPoll = !!(job && enabled && isJobActive(job.status))
 
   return useQuery({
     queryKey: queryKeys.jobs.progress(job?.id ?? 0),
@@ -45,31 +38,23 @@ export function useJobProgressQuery(
     },
     enabled: shouldPoll,
     staleTime: STALE_TIME.PROGRESS,
-
-    // Poll every 3s for active backup jobs
-    // Auto-stops when job completes (shouldPoll becomes false)
     refetchInterval: shouldPoll ? PROGRESS_POLL_INTERVAL : false,
   })
 }
 
 /**
- * Hook for fetching progress of ALL running backup jobs at once
- * Better performance than polling each job individually
+ * Hook for fetching progress of ALL running jobs at once
  */
 export function useAllJobsProgress(jobs: JobRun[]) {
   const { apiCall } = useApi()
 
-  const runningBackupJobs = jobs.filter(job =>
-    isJobActive(job.status) && isBackupJob(job.job_type)
-  )
-
-  const hasRunningBackups = runningBackupJobs.length > 0
+  const runningJobs = jobs.filter(job => isJobActive(job.status))
+  const hasRunningJobs = runningJobs.length > 0
 
   return useQuery({
-    queryKey: [...queryKeys.jobs.all, 'all-progress', runningBackupJobs.map(j => j.id)],
+    queryKey: [...queryKeys.jobs.all, 'all-progress', runningJobs.map(j => j.id)],
     queryFn: async () => {
-      // Fetch progress for all running backup jobs in parallel
-      const progressPromises = runningBackupJobs.map(async (job) => {
+      const progressPromises = runningJobs.map(async (job) => {
         try {
           const response = await apiCall<JobProgressResponse>(
             `job-runs/${job.id}/progress`,
@@ -83,7 +68,6 @@ export function useAllJobsProgress(jobs: JobRun[]) {
 
       const results = await Promise.all(progressPromises)
 
-      // Convert to map for easy lookup
       const progressMap: Record<number, JobProgressResponse> = {}
       results.forEach(({ jobId, progress }) => {
         if (progress) {
@@ -93,8 +77,8 @@ export function useAllJobsProgress(jobs: JobRun[]) {
 
       return progressMap
     },
-    enabled: hasRunningBackups,
+    enabled: hasRunningJobs,
     staleTime: STALE_TIME.PROGRESS,
-    refetchInterval: hasRunningBackups ? PROGRESS_POLL_INTERVAL : false,
+    refetchInterval: hasRunningJobs ? PROGRESS_POLL_INTERVAL : false,
   })
 }
