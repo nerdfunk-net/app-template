@@ -128,10 +128,10 @@ export interface DiffResult {
 
 export interface ConfigAttribute {
   key: string
-  nautobotValue: unknown
+  inventoryValue: unknown
   checkmkValue: unknown
   isDifferent: boolean
-  nautobotMissing: boolean
+  inventoryMissing: boolean
   checkmkMissing: boolean
   isIgnored: boolean
 }

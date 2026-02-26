@@ -4,29 +4,29 @@ const EMPTY_IGNORED_ATTRIBUTES: string[] = []
 
 // Helper function to render config comparison
 export function renderConfigComparison(
-  nautobot: { attributes?: Record<string, unknown> } | null,
+  inventory: { attributes?: Record<string, unknown> } | null,
   checkmk: { attributes?: Record<string, unknown> } | null,
   ignoredAttributes: string[] = EMPTY_IGNORED_ATTRIBUTES
 ): ConfigAttribute[] {
   const allKeys = new Set([
-    ...Object.keys(nautobot?.attributes || {}),
+    ...Object.keys(inventory?.attributes || {}),
     ...Object.keys(checkmk?.attributes || {})
   ])
 
   return Array.from(allKeys).map(key => {
-    const nautobotValue = nautobot?.attributes?.[key]
+    const inventoryValue = inventory?.attributes?.[key]
     const checkmkValue = checkmk?.attributes?.[key]
-    const isDifferent = JSON.stringify(nautobotValue) !== JSON.stringify(checkmkValue)
-    const nautobotMissing = nautobotValue === undefined
+    const isDifferent = JSON.stringify(inventoryValue) !== JSON.stringify(checkmkValue)
+    const inventoryMissing = inventoryValue === undefined
     const checkmkMissing = checkmkValue === undefined
     const isIgnored = ignoredAttributes.includes(key)
 
     return {
       key,
-      nautobotValue,
+      inventoryValue,
       checkmkValue,
       isDifferent,
-      nautobotMissing,
+      inventoryMissing,
       checkmkMissing,
       isIgnored
     }

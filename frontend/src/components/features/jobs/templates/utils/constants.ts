@@ -3,6 +3,9 @@ import type { JobTemplate, JobType } from '../types'
 // React best practice: Extract default objects to prevent re-render loops
 export const EMPTY_TEMPLATES: JobTemplate[] = []
 export const EMPTY_TYPES: JobType[] = []
+export const EMPTY_REPOS: any[] = []
+export const EMPTY_CMD_TEMPLATES: any[] = []
+export const EMPTY_CUSTOM_FIELDS: any[] = []
 
 export const JOB_TYPE_LABELS: Record<string, string> = {
   example: 'Example',
@@ -19,4 +22,7 @@ export const DEFAULT_TEMPLATE: Partial<JobTemplate> = {
 export const STALE_TIME = {
   TEMPLATES: 30 * 1000,       // 30 seconds - moderately dynamic
   JOB_TYPES: 5 * 60 * 1000,  // 5 minutes - rarely changes
+  CONFIG_REPOS: 5 * 60 * 1000,
+  CMD_TEMPLATES: 30 * 1000,
+  CUSTOM_FIELDS: 5 * 60 * 1000,
 } as const

@@ -13,7 +13,7 @@ class PermissionBase(BaseModel):
     """Base permission model."""
 
     resource: str = Field(
-        ..., description="Resource identifier (e.g., 'nautobot.devices')"
+        ..., description="Resource identifier (e.g., 'devices', 'jobs')"
     )
     action: str = Field(
         ..., description="Action type (e.g., 'read', 'write', 'delete', 'execute')"

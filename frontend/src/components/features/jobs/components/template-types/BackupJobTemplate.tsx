@@ -130,13 +130,12 @@ export function BackupJobTemplate({
                 onValueChange={setFormTimestampCustomFieldName}
                 disabled={customFields.length === 0}
               >
-                <SelectTrigger 
-                  id="timestamp-custom-field" 
-                  className={`h-9 bg-white ${
-                    !formTimestampCustomFieldName 
-                      ? "border-red-300 focus:ring-red-500 focus:border-red-500" 
+                <SelectTrigger
+                  id="timestamp-custom-field"
+                  className={`h-9 bg-white ${!formTimestampCustomFieldName
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                       : "border-teal-200"
-                  }`}
+                    }`}
                 >
                   <SelectValue placeholder={customFields.length === 0 ? "No suitable custom fields found" : "Select custom field..."} />
                 </SelectTrigger>
@@ -162,7 +161,7 @@ export function BackupJobTemplate({
           )}
         </div>
         <p className="text-xs text-teal-600 mt-2">
-          When enabled, the backup completion timestamp will be written to the selected custom field in Nautobot
+          When enabled, the backup completion timestamp will be written to the selected custom field in the inventory
         </p>
       </div>
 

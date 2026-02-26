@@ -102,7 +102,7 @@ export function useCustomFields(options: UseQueryOptions = DEFAULT_OPTIONS) {
   return useQuery({
     queryKey: queryKeys.jobs.customFields('devices'),
     queryFn: async () => {
-      const response = await apiCall<CustomField[]>('/api/nautobot/custom-fields/devices', { method: 'GET' })
+      const response = await apiCall<CustomField[]>('/api/custom-fields/devices', { method: 'GET' })
       const allFields = Array.isArray(response) ? response : []
 
       // Filter for text and date type custom fields that can hold timestamp

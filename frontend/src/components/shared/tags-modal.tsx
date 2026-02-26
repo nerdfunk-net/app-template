@@ -47,7 +47,7 @@ export function TagsModal({
   const loadTags = useCallback(async () => {
     setIsLoadingTags(true)
     try {
-      const tagsData = await apiCall<TagItem[]>('nautobot/tags/devices', { method: 'GET' })
+      const tagsData = await apiCall<TagItem[]>('tags/devices', { method: 'GET' })
       if (tagsData && Array.isArray(tagsData)) {
         setAvailableTags(tagsData)
       }
@@ -86,11 +86,10 @@ export function TagsModal({
               {availableTags.map(tag => (
                 <label
                   key={tag.id}
-                  className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
-                    selectedTags.includes(tag.id)
+                  className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${selectedTags.includes(tag.id)
                       ? 'bg-primary/10 border-primary'
                       : 'hover:bg-muted'
-                  }`}
+                    }`}
                 >
                   <Checkbox
                     checked={selectedTags.includes(tag.id)}

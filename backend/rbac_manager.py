@@ -65,7 +65,7 @@ def create_permission(
     """Create a new permission.
 
     Args:
-        resource: Resource identifier (e.g., 'nautobot.devices', 'configs.backup')
+        resource: Resource identifier (e.g., 'devices', 'configs.backup')
         action: Action type (e.g., 'read', 'write', 'delete', 'execute')
         description: Human-readable description
 
@@ -283,7 +283,7 @@ def has_permission(user_id: int, resource: str, action: str) -> bool:
 
     Args:
         user_id: User ID
-        resource: Resource identifier (e.g., 'nautobot.devices')
+        resource: Resource identifier (e.g., 'devices')
         action: Action type (e.g., 'read', 'write')
 
     Returns:

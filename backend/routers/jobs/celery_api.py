@@ -86,7 +86,7 @@ async def submit_progress_test_task(request: ProgressTaskRequest):
 @handle_celery_errors("get task status")
 async def get_task_status(
     task_id: str,
-    current_user: dict = Depends(require_permission("nautobot.devices", "read")),
+    current_user: dict = Depends(require_permission("jobs.runs", "read")),
 ):
     """
     Get the status and result of a Celery task.

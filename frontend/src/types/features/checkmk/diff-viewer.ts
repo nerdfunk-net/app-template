@@ -1,10 +1,10 @@
-export type DeviceSource = 'nautobot' | 'checkmk' | 'both'
-export type SystemFilter = 'all' | 'both' | 'nautobot' | 'checkmk'
+export type DeviceSource = 'inventory' | 'checkmk' | 'both'
+export type SystemFilter = 'all' | 'both' | 'inventory' | 'checkmk'
 
 export interface DiffDevice {
   name: string
   source: DeviceSource
-  nautobot_id?: string
+  inventory_id?: string
   ip_address?: string
   role?: string
   location?: string
@@ -18,9 +18,9 @@ export interface DiffDevice {
 
 export interface DiffTaskResult {
   all_devices: DiffDevice[]
-  nautobot_only: DiffDevice[]
+  inventory_only: DiffDevice[]
   checkmk_only: DiffDevice[]
-  total_nautobot: number
+  total_inventory: number
   total_checkmk: number
   total_both: number
 }

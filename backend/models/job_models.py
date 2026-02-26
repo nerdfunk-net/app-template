@@ -48,13 +48,7 @@ class DeviceResult(BaseModel):
     error_message: Optional[str] = None
     processed_at: datetime
 
-    # Enhanced device data from Nautobot (added for device enrichment)
-    device_id: Optional[str] = None
-    role: Optional[Dict[str, Any]] = None
-    location: Optional[Dict[str, Any]] = None
-    device_type: Optional[Dict[str, Any]] = None
-    primary_ip4: Optional[Dict[str, Any]] = None
-    device_status: Optional[Dict[str, Any]] = None
+
 
 
 class Job(BaseModel):

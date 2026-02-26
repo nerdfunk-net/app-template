@@ -74,14 +74,14 @@ export function GenericJobResultView({ result }: GenericJobResultProps) {
       </div>
 
       {/* Message */}
-      {result.message && (
+      {typeof result.message === 'string' && result.message && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
           <p className="text-sm text-blue-800">{String(result.message)}</p>
         </div>
       )}
 
       {/* Device Results Table */}
-      {result.results && result.results.length > 0 && (
+      {Array.isArray(result.results) && result.results.length > 0 && (
         <div className="border rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-4 py-2 border-b">
             <h4 className="text-sm font-semibold text-gray-700">Device Results</h4>

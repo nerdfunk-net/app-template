@@ -67,8 +67,7 @@ class TemplateManager:
                 filename=template_data.get("filename"),
                 content_hash=content_hash,
                 variables=variables_json,
-                tags=tags_json,
-                use_nautobot_context=template_data.get("use_nautobot_context", False),
+                tags=template_data.get("tags", []),
                 pass_snmp_mapping=template_data.get("pass_snmp_mapping", False),
                 inventory_id=template_data.get("inventory_id"),
                 pre_run_command=template_data.get("pre_run_command"),
@@ -190,7 +189,8 @@ class TemplateManager:
 
             # Prepare update data
             variables_json = json.dumps(template_data.get("variables", {}))
-            tags_json = json.dumps(template_data.get("tags", []))
+            tags = template_data.get("tags", []) # Use list directly, not JSON string
+            tags_json = json.dumps(tags)
 
             content = template_data.get("content", current.get("content", ""))
             content_hash = (
@@ -218,10 +218,7 @@ class TemplateManager:
                 "filename": template_data.get("filename", current["filename"]),
                 "content_hash": content_hash,
                 "variables": variables_json,
-                "tags": tags_json,
-                "use_nautobot_context": template_data.get(
-                    "use_nautobot_context", current.get("use_nautobot_context", False)
-                ),
+                "tags": tags,
                 "pass_snmp_mapping": template_data.get(
                     "pass_snmp_mapping", current.get("pass_snmp_mapping", False)
                 ),
@@ -374,7 +371,6 @@ class TemplateManager:
             "created_by": template.created_by,
             "scope": template.scope,
             "is_active": bool(template.is_active),
-            "use_nautobot_context": bool(template.use_nautobot_context),
             "pass_snmp_mapping": bool(template.pass_snmp_mapping),
             "inventory_id": template.inventory_id,
             "pre_run_command": template.pre_run_command,

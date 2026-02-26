@@ -16,3 +16,23 @@ export interface JobType {
   description: string
 }
 
+export interface GitRepository {
+  id: string | number
+  name: string
+  url?: string
+}
+
+export interface CommandTemplate {
+  id: string | number
+  name: string
+  description?: string
+  commands?: string
+}
+
+export interface CustomField {
+  id: string | number
+  name: string
+  key: string
+  type?: { value: string; label: string }
+}
+

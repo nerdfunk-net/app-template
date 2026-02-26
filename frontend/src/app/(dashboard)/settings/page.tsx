@@ -4,14 +4,6 @@ import { Server, FileCode, GitBranch, Zap, Key, Users } from 'lucide-react'
 
 const settingsPages = [
   {
-    title: 'Nautobot',
-    description: 'Configure your Nautobot server connection',
-    href: '/settings/nautobot',
-    icon: Server,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100'
-  },
-  {
     title: 'Templates',
     description: 'Manage configuration templates',
     href: '/settings/templates',

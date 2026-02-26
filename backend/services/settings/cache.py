@@ -119,7 +119,7 @@ class RedisCacheService:
         """Clear all entries in a namespace.
 
         Args:
-            namespace: Namespace prefix (e.g., 'nautobot:devices')
+            namespace: Namespace prefix (e.g., 'devices')
 
         Returns:
             Number of keys deleted
@@ -333,7 +333,7 @@ class RedisCacheService:
         """Get detailed information about a specific namespace.
 
         Args:
-            namespace: Namespace to query (e.g., 'nautobot:devices')
+            namespace: Namespace to query (e.g., 'devices')
 
         Returns:
             Dictionary with namespace statistics and entries

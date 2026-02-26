@@ -58,7 +58,7 @@ export function CustomFieldsModal({
   const loadCustomFields = useCallback(async () => {
     setIsLoadingCustomFields(true)
     try {
-      const fieldsData = await apiCall<CustomField[]>('nautobot/custom-fields/devices', { method: 'GET' })
+      const fieldsData = await apiCall<CustomField[]>('custom-fields/devices', { method: 'GET' })
       if (fieldsData && Array.isArray(fieldsData)) {
         setCustomFields(fieldsData)
 
@@ -66,7 +66,7 @@ export function CustomFieldsModal({
         const selectFields = fieldsData.filter(f => f.type?.value === 'select' || f.type?.value === 'multi-select')
         const choicesPromises = selectFields.map(async (field) => {
           try {
-            const choices = await apiCall<string[]>(`nautobot/custom-field-choices/${field.key}`, { method: 'GET' })
+            const choices = await apiCall<string[]>(`custom-field-choices/${field.key}`, { method: 'GET' })
             return { key: field.key, choices: choices || [] }
           } catch {
             return { key: field.key, choices: [] }

@@ -4,7 +4,7 @@ export type { DeviceFormValues, InterfaceFormValues } from './validation'
 
 // Hooks
 export { useDeviceForm } from './hooks/use-device-form'
-export type { NautobotDefaults } from './hooks/use-device-form'
+export type { DeviceDefaults } from './hooks/use-device-form'
 
 // Utils
 export { transformCheckMKToFormData, getDeviceNameFromHost } from './utils/transform-checkmk-data'

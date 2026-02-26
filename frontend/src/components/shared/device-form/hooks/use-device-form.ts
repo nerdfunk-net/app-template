@@ -7,7 +7,7 @@ import { deviceFormSchema, type DeviceFormValues } from '../validation'
 // Types
 // ============================================================================
 
-export interface NautobotDefaults {
+export interface DeviceDefaults {
   device_role?: string
   device_status?: string
   location?: string
@@ -17,7 +17,7 @@ export interface NautobotDefaults {
 }
 
 interface UseDeviceFormOptions {
-  defaults?: NautobotDefaults | null
+  defaults?: DeviceDefaults | null
   initialData?: Partial<DeviceFormValues> // NEW: Pre-populate from inventory/existing device
   mode?: 'create' | 'update' // NEW: Determines validation requirements
 }
@@ -51,11 +51,11 @@ const DEFAULT_INTERFACE = {
  * Usage:
  * ```tsx
  * // Create mode (add-device app)
- * const form = useDeviceForm({ defaults: nautobotDefaults })
+ * const form = useDeviceForm({ defaults: deviceDefaults })
  * 
  * // Update mode (CheckMK sync)
  * const form = useDeviceForm({
- *   defaults: nautobotDefaults,
+ *   defaults: deviceDefaults,
  *   initialData: transformedCheckMKData,
  *   mode: 'update'
  * })
@@ -108,8 +108,8 @@ export function useDeviceForm(
           // Ensure arrays are properly merged
           selectedTags: initialData.selectedTags || baseValues.selectedTags,
           customFieldValues: initialData.customFieldValues || baseValues.customFieldValues,
-          interfaces: initialData.interfaces && initialData.interfaces.length > 0 
-            ? initialData.interfaces 
+          interfaces: initialData.interfaces && initialData.interfaces.length > 0
+            ? initialData.interfaces
             : baseValues.interfaces,
           // Preserve defaults for prefix configuration if not provided
           addPrefix: initialData.addPrefix !== undefined ? initialData.addPrefix : baseValues.addPrefix,

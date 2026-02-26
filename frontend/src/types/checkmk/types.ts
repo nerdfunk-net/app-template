@@ -35,7 +35,7 @@ export interface StatusMessage {
 
 /**
  * CheckMK configuration for attribute/tag mappings
- * Maps CheckMK attributes and tags to Nautobot fields
+ * Maps CheckMK attributes and tags to Device fields
  */
 export interface CheckMKConfig {
   attr2htg?: Record<string, string>
@@ -44,10 +44,10 @@ export interface CheckMKConfig {
 }
 
 /**
- * Nautobot metadata for device properties
- * Contains reference data from Nautobot API
+ * Device metadata for device properties
+ * Contains reference data from local DB
  */
-export interface NautobotMetadata {
+export interface DeviceMetadata {
   locations: Array<{ id: string; name: string }>
   roles: Array<{ id: string; name: string }>
   statuses: Array<{ id: string; name: string }>
@@ -57,11 +57,11 @@ export interface NautobotMetadata {
 }
 
 /**
- * Property mapping for CheckMK to Nautobot field conversion
+ * Property mapping for CheckMK to Device field conversion
  * Represents a single field mapping with metadata
  */
 export interface PropertyMapping {
-  nautobotField: string
+  deviceField: string
   value: unknown
   isCore?: boolean
 }

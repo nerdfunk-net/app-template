@@ -79,7 +79,7 @@ export function ScanPrefixesJobTemplate({
 
     setLoadingCustomFields(true)
     try {
-      const response = await fetch("/api/proxy/api/nautobot/custom-fields/prefixes", {
+      const response = await fetch("/api/proxy/api/custom-fields/prefixes", {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",

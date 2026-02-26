@@ -151,7 +151,7 @@ def require_permission(resource: str, action: str):
     """Dependency to require a specific permission.
 
     Usage:
-        @app.get("/api/devices", dependencies=[Depends(require_permission("nautobot.devices", "read"))])
+        @app.get("/api/devices", dependencies=[Depends(require_permission("devices", "read"))])
         def get_devices():
             ...
     """
@@ -181,7 +181,7 @@ def require_any_permission(resource: str, actions: list):
     """Dependency to require ANY of the specified permissions.
 
     Usage:
-        @app.get("/api/devices", dependencies=[Depends(require_any_permission("nautobot.devices", ["read", "write"]))])
+        @app.get("/api/devices", dependencies=[Depends(require_any_permission("devices", ["read", "write"]))])
         def get_devices():
             ...
     """
@@ -211,7 +211,7 @@ def require_all_permissions(resource: str, actions: list):
     """Dependency to require ALL of the specified permissions.
 
     Usage:
-        @app.get("/api/devices", dependencies=[Depends(require_all_permissions("nautobot.devices", ["read", "write"]))])
+        @app.get("/api/devices", dependencies=[Depends(require_all_permissions("devices", ["read", "write"]))])
         def manage_devices():
             ...
     """

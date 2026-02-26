@@ -46,6 +46,16 @@ export interface GenericJobResult {
   [key: string]: unknown
 }
 
+export interface GenericDeviceResult {
+  device_id?: string
+  hostname?: string
+  operation?: string
+  success: boolean
+  message?: string
+  error?: string
+  [key: string]: unknown
+}
+
 // ============================================================================
 // Utility Functions
 // ============================================================================

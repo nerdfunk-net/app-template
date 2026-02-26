@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useApi } from '@/hooks/use-api'
 import { cn } from '@/lib/utils'
-import { 
-  CheckCircle2, 
-  XCircle, 
-  AlertTriangle, 
+import {
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
   Loader2,
   RefreshCw
 } from 'lucide-react'
@@ -38,7 +38,7 @@ export default function DashboardCheckmkSyncStatus({ refreshTrigger = 0 }: Dashb
 
   useEffect(() => {
     loadData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger])
 
   const loadData = async () => {
@@ -78,7 +78,7 @@ export default function DashboardCheckmkSyncStatus({ refreshTrigger = 0 }: Dashb
               <CardTitle className="text-sm font-semibold text-slate-700">
                 CheckMK Sync Status
               </CardTitle>
-              <p className="text-xs text-slate-500">Nautobot ↔ CheckMK device comparison</p>
+              <p className="text-xs text-slate-500">Inventory ↔ CheckMK device comparison</p>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function DashboardCheckmkSyncStatus({ refreshTrigger = 0 }: Dashb
                 </div>
                 <div className="text-2xl font-bold text-green-700">{inSyncCount}</div>
               </div>
-              
+
               {/* Out of Sync */}
               <div className="text-center p-3 rounded-lg bg-red-50">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
@@ -120,7 +120,7 @@ export default function DashboardCheckmkSyncStatus({ refreshTrigger = 0 }: Dashb
                 </div>
                 <div className="text-2xl font-bold text-red-700">{outOfSyncCount}</div>
               </div>
-              
+
               {/* Total */}
               <div className="text-center p-3 rounded-lg bg-slate-100">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
@@ -138,12 +138,12 @@ export default function DashboardCheckmkSyncStatus({ refreshTrigger = 0 }: Dashb
                   <span>{inSyncPercent.toFixed(0)}% in sync</span>
                 </div>
                 <div className="h-2.5 bg-slate-200 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className={cn(
                       "h-full rounded-full transition-all duration-500",
-                      inSyncPercent === 100 ? "bg-green-500" : 
-                      inSyncPercent >= 80 ? "bg-green-400" :
-                      inSyncPercent >= 50 ? "bg-amber-400" : "bg-red-400"
+                      inSyncPercent === 100 ? "bg-green-500" :
+                        inSyncPercent >= 80 ? "bg-green-400" :
+                          inSyncPercent >= 50 ? "bg-amber-400" : "bg-red-400"
                     )}
                     style={{ width: `${inSyncPercent}%` }}
                   />

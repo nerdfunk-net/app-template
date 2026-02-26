@@ -152,7 +152,7 @@ async def get_latest_compare_devices_result(
     Get the latest compare_devices job result for dashboard.
 
     Returns:
-    - Latest job result with sync status between Nautobot and CheckMK
+    - Latest job result with sync status
     - Number of devices in sync vs out of sync
     """
     try:
