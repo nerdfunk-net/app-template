@@ -67,7 +67,7 @@ async def lifespan(app: FastAPI):
         init_db()
         logger.info("Database tables initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize database tables: {e}")
+        logger.error("Failed to initialize database tables: %s", e)
         raise
 
     # Ensure built-in Celery queues exist
@@ -77,7 +77,7 @@ async def lifespan(app: FastAPI):
         settings_manager.ensure_builtin_queues()
         logger.info("Built-in Celery queues verified")
     except Exception as e:
-        logger.error(f"Failed to ensure built-in queues: {e}")
+        logger.error("Failed to ensure built-in queues: %s", e)
 
     # Export SSH keys to filesystem
     try:
@@ -85,11 +85,11 @@ async def lifespan(app: FastAPI):
 
         exported_keys = credentials_manager.export_ssh_keys_to_filesystem()
         if exported_keys:
-            logger.info(f"Exported {len(exported_keys)} SSH keys to ./data/ssh_keys/")
+            logger.info("Exported %s SSH keys to ./data/ssh_keys/", len(exported_keys))
         else:
             logger.debug("No SSH keys to export")
     except Exception as e:
-        logger.error(f"Failed to export SSH keys: {e}")
+        logger.error("Failed to export SSH keys: %s", e)
 
     # Ensure admin user has RBAC role assigned
     try:
@@ -98,7 +98,7 @@ async def lifespan(app: FastAPI):
         user_db_manager.ensure_admin_has_rbac_role()
         logger.info("Admin RBAC role assignment completed")
     except Exception as e:
-        logger.error(f"Failed to ensure admin RBAC role: {e}")
+        logger.error("Failed to ensure admin RBAC role: %s", e)
 
     # Initialize next_run for job schedules that don't have one
     try:
@@ -107,10 +107,10 @@ async def lifespan(app: FastAPI):
         result = jobs_manager.initialize_schedule_next_runs()
         if result["initialized_count"] > 0:
             logger.info(
-                f"Initialized next_run for {result['initialized_count']} job schedules"
+                "Initialized next_run for %s job schedules", result['initialized_count']
             )
     except Exception as e:
-        logger.error(f"Failed to initialize job schedule next_runs: {e}")
+        logger.error("Failed to initialize job schedule next_runs: %s", e)
 
     # Initialize cache prefetch
     try:
@@ -120,7 +120,7 @@ async def lifespan(app: FastAPI):
         from services.settings.cache import cache_service
 
         cache_cfg = settings_manager.get_cache_settings()
-        logger.debug(f"Startup cache: settings loaded: {cache_cfg}")
+        logger.debug("Startup cache: settings loaded: %s", cache_cfg)
         if cache_cfg.get("enabled", True):
 
             async def prefetch_commits_once():
@@ -178,10 +178,10 @@ async def lifespan(app: FastAPI):
                     cache_key = f"{repo_scope}:commits:{branch_name}"
                     cache_service.set(cache_key, commits, ttl)
                     logger.debug(
-                        f"Startup cache: Prefetched {len(commits)} commits for branch '{branch_name}' (ttl={ttl}s)"
+                        "Startup cache: Prefetched %s commits for branch '%s' (ttl=%ss)", len(commits), branch_name, ttl
                     )
                 except Exception as e:
-                    logger.warning(f"Startup cache: commits prefetch failed: {e}")
+                    logger.warning("Startup cache: commits prefetch failed: %s", e)
 
             if cache_cfg.get("prefetch_on_startup", True):
                 prefetch_items = cache_cfg.get("prefetch_items") or {"git": True}
@@ -189,15 +189,15 @@ async def lifespan(app: FastAPI):
                 for key, enabled in prefetch_items.items():
                     if enabled and key in prefetch_map:
                         logger.debug(
-                            f"Startup cache: prefetch enabled for '{key}' — scheduling task"
+                            "Startup cache: prefetch enabled for '%s' — scheduling task", key
                         )
                         asyncio.create_task(prefetch_map[key]())
                     elif not enabled:
-                        logger.debug(f"Startup cache: prefetch disabled for '{key}'")
+                        logger.debug("Startup cache: prefetch disabled for '%s'", key)
                     else:
-                        logger.debug(f"Startup cache: no prefetch handler for '{key}'")
+                        logger.debug("Startup cache: no prefetch handler for '%s'", key)
     except Exception as e:
-        logger.warning(f"Startup cache: Failed to initialize cache prefetch: {e}")
+        logger.warning("Startup cache: Failed to initialize cache prefetch: %s", e)
 
     yield
 
@@ -241,11 +241,11 @@ try:
             StaticFiles(directory=static_dir),
             name="swagger-ui",
         )
-        logger.info(f"Swagger UI static files mounted from: {static_dir}")
+        logger.info("Swagger UI static files mounted from: %s", static_dir)
     else:
-        logger.warning(f"Swagger UI static directory not found: {static_dir}")
+        logger.warning("Swagger UI static directory not found: %s", static_dir)
 except Exception as e:
-    logger.error(f"Failed to mount Swagger UI static files: {e}")
+    logger.error("Failed to mount Swagger UI static files: %s", e)
 
 # Include routers
 # Authentication & Profile

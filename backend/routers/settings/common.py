@@ -45,7 +45,7 @@ async def get_all_settings(
         return {"settings": settings_data}
 
     except Exception as e:
-        logger.error(f"Error getting settings: {e}")
+        logger.error("Error getting settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve settings: {str(e)}",
@@ -64,7 +64,7 @@ async def get_nautobot_settings(
         return {"success": True, "data": nautobot_settings}
 
     except Exception as e:
-        logger.error(f"Error getting Nautobot settings: {e}")
+        logger.error("Error getting Nautobot settings: %s", e)
         return {
             "success": False,
             "message": f"Failed to retrieve Nautobot settings: {str(e)}",
@@ -83,7 +83,7 @@ async def get_git_settings(
         return {"success": True, "data": git_settings}
 
     except Exception as e:
-        logger.error(f"Error getting Git settings: {e}")
+        logger.error("Error getting Git settings: %s", e)
         return {
             "success": False,
             "message": f"Failed to retrieve Git settings: {str(e)}",
@@ -101,7 +101,7 @@ async def get_cache_settings(
         cache_settings = settings_manager.get_cache_settings()
         return {"success": True, "data": cache_settings}
     except Exception as e:
-        logger.error(f"Error getting Cache settings: {e}")
+        logger.error("Error getting Cache settings: %s", e)
         return {
             "success": False,
             "message": f"Failed to retrieve Cache settings: {str(e)}",
@@ -132,7 +132,7 @@ async def update_cache_settings(
                 detail="Failed to update Cache settings",
             )
     except Exception as e:
-        logger.error(f"Error updating Cache settings: {e}")
+        logger.error("Error updating Cache settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update Cache settings: {str(e)}",
@@ -160,7 +160,7 @@ async def create_cache_settings(
         else:
             return {"success": False, "message": "Failed to update Cache settings"}
     except Exception as e:
-        logger.error(f"Error updating Cache settings: {e}")
+        logger.error("Error updating Cache settings: %s", e)
         return {
             "success": False,
             "message": f"Failed to update Cache settings: {str(e)}",
@@ -197,7 +197,7 @@ async def update_all_settings(
             )
 
     except Exception as e:
-        logger.error(f"Error updating settings: {e}")
+        logger.error("Error updating settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update settings: {str(e)}",
@@ -227,7 +227,7 @@ async def update_nautobot_settings(
             )
 
     except Exception as e:
-        logger.error(f"Error updating Nautobot settings: {e}")
+        logger.error("Error updating Nautobot settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update Nautobot settings: {str(e)}",
@@ -257,7 +257,7 @@ async def update_git_settings(
             )
 
     except Exception as e:
-        logger.error(f"Error updating Git settings: {e}")
+        logger.error("Error updating Git settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update Git settings: {str(e)}",
@@ -286,7 +286,7 @@ async def create_nautobot_settings(
             return {"success": False, "message": "Failed to update Nautobot settings"}
 
     except Exception as e:
-        logger.error(f"Error updating Nautobot settings: {e}")
+        logger.error("Error updating Nautobot settings: %s", e)
         return {
             "success": False,
             "message": f"Failed to update Nautobot settings: {str(e)}",
@@ -314,7 +314,7 @@ async def create_git_settings(
             return {"success": False, "message": "Failed to update Git settings"}
 
     except Exception as e:
-        logger.error(f"Error updating Git settings: {e}")
+        logger.error("Error updating Git settings: %s", e)
         return {"success": False, "message": f"Failed to update Git settings: {str(e)}"}
 
 
@@ -339,7 +339,7 @@ async def test_nautobot_connection(
         }
 
     except Exception as e:
-        logger.error(f"Error testing Nautobot connection: {e}")
+        logger.error("Error testing Nautobot connection: %s", e)
         return {
             "success": False,
             "message": f"Test failed: {str(e)}",
@@ -370,7 +370,7 @@ async def test_git_connection(
         }
 
     except Exception as e:
-        logger.error(f"Error testing Git connection: {e}")
+        logger.error("Error testing Git connection: %s", e)
         return {
             "success": False,
             "message": f"Test failed: {str(e)}",
@@ -402,7 +402,7 @@ async def reset_settings_to_defaults(
             )
 
     except Exception as e:
-        logger.error(f"Error resetting settings: {e}")
+        logger.error("Error resetting settings: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reset settings: {str(e)}",
@@ -431,7 +431,7 @@ async def check_settings_health(
             }
 
     except Exception as e:
-        logger.error(f"Settings health check failed: {e}")
+        logger.error("Settings health check failed: %s", e)
         return {
             "status": "error",
             "message": f"Health check failed: {str(e)}",

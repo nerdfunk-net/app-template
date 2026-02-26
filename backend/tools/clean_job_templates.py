@@ -42,12 +42,12 @@ def clean_job_templates(create_example: bool = True) -> None:
             # First delete all job schedules (they reference job templates)
             schedules_result = db.execute(delete(JobSchedule))
             schedules_count = schedules_result.rowcount
-            logger.info(f"Deleted {schedules_count} job schedules")
+            logger.info("Deleted %s job schedules", schedules_count)
 
             # Delete all job templates
             templates_result = db.execute(delete(JobTemplate))
             templates_count = templates_result.rowcount
-            logger.info(f"Deleted {templates_count} job templates")
+            logger.info("Deleted %s job templates", templates_count)
 
             # Commit deletions
             db.commit()
@@ -70,15 +70,15 @@ def clean_job_templates(create_example: bool = True) -> None:
                 db.commit()
                 db.refresh(example_template)
 
-                logger.info(f"✓ Created example template (ID: {example_template.id})")
-                logger.info(f"  Name: {example_template.name}")
-                logger.info(f"  Type: {example_template.job_type}")
-                logger.info(f"  Description: {example_template.description}")
+                logger.info("✓ Created example template (ID: %s)", example_template.id)
+                logger.info("  Name: %s", example_template.name)
+                logger.info("  Type: %s", example_template.job_type)
+                logger.info("  Description: %s", example_template.description)
 
             logger.info("\n✓ Job templates cleanup completed successfully")
 
         except Exception as e:
-            logger.error(f"Error cleaning job templates: {e}")
+            logger.error("Error cleaning job templates: %s", e)
             db.rollback()
             raise
 
@@ -96,5 +96,5 @@ if __name__ == "__main__":
     try:
         clean_job_templates(create_example=not args.no_example)
     except Exception as e:
-        logger.error(f"Failed to clean job templates: {e}")
+        logger.error("Failed to clean job templates: %s", e)
         sys.exit(1)

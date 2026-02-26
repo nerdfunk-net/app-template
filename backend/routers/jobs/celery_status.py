@@ -104,7 +104,7 @@ async def list_queues(
         }
 
     except Exception as e:
-        logger.error(f"Error fetching queue metrics: {e}")
+        logger.error("Error fetching queue metrics: %s", e)
         return {
             "success": False,
             "error": str(e),
@@ -140,7 +140,7 @@ async def purge_queue(
             purged_count = queue_obj(conn.channel()).purge()
 
         logger.info(
-            f"Purged {purged_count} task(s) from queue '{queue_name}' by user {current_user.get('username')}"
+            "Purged %s task(s) from queue '%s' by user %s", purged_count, queue_name, current_user.get('username')
         )
 
         return {
@@ -153,7 +153,7 @@ async def purge_queue(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error purging queue {queue_name}: {e}")
+        logger.error("Error purging queue %s: %s", queue_name, e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to purge queue: {str(e)}",
@@ -191,16 +191,16 @@ async def purge_all_queues(
                     total_purged += purged_count or 0
 
                     logger.info(
-                        f"Purged {purged_count} task(s) from queue '{queue_name}'"
+                        "Purged %s task(s) from queue '%s'", purged_count, queue_name
                     )
                 except Exception as e:
-                    logger.error(f"Error purging queue {queue_name}: {e}")
+                    logger.error("Error purging queue %s: %s", queue_name, e)
                     purged_queues.append(
                         {"queue": queue_name, "purged_tasks": 0, "error": str(e)}
                     )
 
         logger.info(
-            f"Purged total of {total_purged} task(s) from all queues by user {current_user.get('username')}"
+            "Purged total of %s task(s) from all queues by user %s", total_purged, current_user.get('username')
         )
 
         return {
@@ -211,7 +211,7 @@ async def purge_all_queues(
         }
 
     except Exception as e:
-        logger.error(f"Error purging all queues: {e}")
+        logger.error("Error purging all queues: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to purge all queues: {str(e)}",

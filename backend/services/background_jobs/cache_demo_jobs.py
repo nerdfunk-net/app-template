@@ -26,7 +26,7 @@ def cache_demo_task(self) -> Dict[str, Any]:
         Dictionary with task results
     """
     try:
-        logger.info(f"Starting cache demo task: {self.request.id}")
+        logger.info("Starting cache demo task: %s", self.request.id)
 
         # Update task state
         self.update_state(
@@ -63,7 +63,7 @@ def cache_demo_task(self) -> Dict[str, Any]:
         cached = cache_service.get(cache_key)
 
         logger.info(
-            f"Cache demo task {self.request.id} completed. Cached: {cached is not None}"
+            "Cache demo task %s completed. Cached: %s", self.request.id, cached is not None
         )
 
         return {
@@ -75,5 +75,5 @@ def cache_demo_task(self) -> Dict[str, Any]:
         }
 
     except Exception as e:
-        logger.error(f"Cache demo task failed: {e}", exc_info=True)
+        logger.error("Cache demo task failed: %s", e, exc_info=True)
         return {"status": "error", "message": f"Cache demo failed: {str(e)}"}

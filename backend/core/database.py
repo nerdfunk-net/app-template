@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 # Create database engine
 DATABASE_URL = settings.database_url
 logger.info(
-    f"Connecting to database: postgresql://{settings.database_username}:***@{settings.database_host}:{settings.database_port}/{settings.database_name}"
+    "Connecting to database: postgresql://%s:***@%s:%s/%s", settings.database_username, settings.database_host, settings.database_port, settings.database_name
 )
 
 engine = create_engine(
@@ -78,7 +78,7 @@ def init_db():
         # Import all models to ensure they're registered with Base.metadata
         from core import models  # noqa: F401
 
-        logger.info(f"Loaded {len(Base.metadata.tables)} table definitions from models")
+        logger.info("Loaded %s table definitions from models", len(Base.metadata.tables))
 
         # Get inspector to check existing tables
         inspector = inspect(engine)
@@ -89,7 +89,7 @@ def init_db():
 
         if missing_tables:
             logger.info(
-                f"Creating {len(missing_tables)} missing table(s): {', '.join(sorted(missing_tables))}"
+                "Creating %s missing table(s): %s", len(missing_tables), ', '.join(sorted(missing_tables))
             )
             # Create all tables defined in models (only missing ones will be created)
             Base.metadata.create_all(bind=engine)
@@ -98,10 +98,10 @@ def init_db():
             logger.info("✓ Database schema is up to date - all tables exist")
 
         logger.info(
-            f"Database initialized successfully ({len(model_tables)} tables total)"
+            "Database initialized successfully (%s tables total)", len(model_tables)
         )
     except Exception as e:
-        logger.error(f"Error initializing database: {e}")
+        logger.error("Error initializing database: %s", e)
         raise
 
 
@@ -128,5 +128,5 @@ def check_connection():
         logger.info("Database connection successful")
         return True
     except Exception as e:
-        logger.error(f"Database connection failed: {e}")
+        logger.error("Database connection failed: %s", e)
         return False

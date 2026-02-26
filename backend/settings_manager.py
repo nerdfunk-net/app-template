@@ -138,7 +138,7 @@ class SettingsManager:
                 return asdict(self.default_git)
 
         except Exception as e:
-            logger.error(f"Error getting Git settings: {e}")
+            logger.error("Error getting Git settings: %s", e)
             return asdict(self.default_git)
 
     def get_all_settings(self) -> Dict[str, Any]:
@@ -184,7 +184,7 @@ class SettingsManager:
                 }
             return asdict(self.default_cache)
         except Exception as e:
-            logger.error(f"Error getting Cache settings: {e}")
+            logger.error("Error getting Cache settings: %s", e)
             return asdict(self.default_cache)
 
     def update_cache_settings(self, settings: Dict[str, Any]) -> bool:
@@ -235,7 +235,7 @@ class SettingsManager:
             logger.info("Cache settings updated successfully")
             return True
         except Exception as e:
-            logger.error(f"Error updating Cache settings: {e}")
+            logger.error("Error updating Cache settings: %s", e)
             return False
 
     def get_celery_settings(self) -> Dict[str, Any]:
@@ -264,7 +264,7 @@ class SettingsManager:
                 }
             return asdict(self.default_celery)
         except Exception as e:
-            logger.error(f"Error getting Celery settings: {e}")
+            logger.error("Error getting Celery settings: %s", e)
             return asdict(self.default_celery)
 
     def update_celery_settings(self, settings: Dict[str, Any]) -> bool:
@@ -307,7 +307,7 @@ class SettingsManager:
             logger.info("Celery settings updated successfully")
             return True
         except Exception as e:
-            logger.error(f"Error updating Celery settings: {e}")
+            logger.error("Error updating Celery settings: %s", e)
             return False
 
     def ensure_builtin_queues(self) -> bool:
@@ -359,7 +359,7 @@ class SettingsManager:
                     current_queues.append(builtin_queue)
                     queues_added.append(builtin_queue["name"])
                     logger.info(
-                        f"Restored missing built-in queue: {builtin_queue['name']}"
+                        "Restored missing built-in queue: %s", builtin_queue['name']
                     )
                 else:
                     # Ensure existing built-in queue has built_in flag set
@@ -368,7 +368,7 @@ class SettingsManager:
                             if not q.get("built_in"):
                                 q["built_in"] = True
                                 logger.info(
-                                    f"Set built_in flag for queue: {builtin_queue['name']}"
+                                    "Set built_in flag for queue: %s", builtin_queue['name']
                                 )
 
             # Update settings if changes were made
@@ -382,7 +382,7 @@ class SettingsManager:
 
                 if success and queues_added:
                     logger.info(
-                        f"Restored {len(queues_added)} built-in queue(s): {', '.join(queues_added)}"
+                        "Restored %s built-in queue(s): %s", len(queues_added), ', '.join(queues_added)
                     )
 
                 return success
@@ -391,7 +391,7 @@ class SettingsManager:
                 return True
 
         except Exception as e:
-            logger.error(f"Error ensuring built-in queues: {e}")
+            logger.error("Error ensuring built-in queues: %s", e)
             return False
 
     def update_git_settings(self, settings: Dict[str, Any]) -> bool:
@@ -434,7 +434,7 @@ class SettingsManager:
             return True
 
         except Exception as e:
-            logger.error(f"Error updating Git settings: {e}")
+            logger.error("Error updating Git settings: %s", e)
             return False
 
     def update_all_settings(self, settings: Dict[str, Any]) -> bool:
@@ -466,7 +466,7 @@ class SettingsManager:
             return metadata
 
         except Exception as e:
-            logger.error(f"Error getting metadata: {e}")
+            logger.error("Error getting metadata: %s", e)
             return {"error": str(e)}
 
     def _handle_database_corruption(self) -> Dict[str, str]:
@@ -502,7 +502,7 @@ class SettingsManager:
                 session.close()
 
         except Exception as e:
-            logger.error(f"Error resetting settings: {e}")
+            logger.error("Error resetting settings: %s", e)
             return False
 
     def health_check(self) -> Dict[str, Any]:
@@ -525,7 +525,7 @@ class SettingsManager:
             }
 
         except Exception as e:
-            logger.error(f"Database health check failed: {e}")
+            logger.error("Database health check failed: %s", e)
             return {"status": "unhealthy", "error": str(e), "recovery_needed": False}
 
     def get_selected_git_repository(self) -> Optional[int]:
@@ -536,7 +536,7 @@ class SettingsManager:
             return int(result.value) if result and result.value else None
 
         except Exception as e:
-            logger.error(f"Error getting selected Git repository: {e}")
+            logger.error("Error getting selected Git repository: %s", e)
             return None
 
     def set_selected_git_repository(self, repository_id: int) -> bool:
@@ -544,11 +544,11 @@ class SettingsManager:
         try:
             repo = SettingsMetadataRepository()
             repo.set_metadata("selected_git_repository", str(repository_id))
-            logger.info(f"Selected Git repository set to ID: {repository_id}")
+            logger.info("Selected Git repository set to ID: %s", repository_id)
             return True
 
         except Exception as e:
-            logger.error(f"Error setting selected Git repository: {e}")
+            logger.error("Error setting selected Git repository: %s", e)
             return False
 
     # OIDC Provider Management
@@ -566,7 +566,7 @@ class SettingsManager:
         config_path = self.get_oidc_providers_config_path()
 
         if not os.path.exists(config_path):
-            logger.warning(f"OIDC providers config not found at {config_path}")
+            logger.warning("OIDC providers config not found at %s", config_path)
             return {"providers": {}, "global": {"allow_traditional_login": True}}
 
         try:
@@ -584,15 +584,15 @@ class SettingsManager:
                 config["global"] = {"allow_traditional_login": True}
 
             logger.info(
-                f"Loaded {len(config.get('providers', {}))} OIDC provider(s) from config"
+                "Loaded %s OIDC provider(s) from config", len(config.get('providers', {}))
             )
             return config
 
         except yaml.YAMLError as e:
-            logger.error(f"Error parsing OIDC providers YAML: {e}")
+            logger.error("Error parsing OIDC providers YAML: %s", e)
             return {"providers": {}, "global": {"allow_traditional_login": True}}
         except Exception as e:
-            logger.error(f"Error loading OIDC providers config: {e}")
+            logger.error("Error loading OIDC providers config: %s", e)
             return {"providers": {}, "global": {"allow_traditional_login": True}}
 
     def get_oidc_providers(self) -> Dict[str, Dict[str, Any]]:
@@ -615,7 +615,7 @@ class SettingsManager:
         # Sort by display_order
         enabled_providers.sort(key=lambda p: p.get("display_order", 999))
 
-        logger.info(f"Found {len(enabled_providers)} enabled OIDC provider(s)")
+        logger.info("Found %s enabled OIDC provider(s)", len(enabled_providers))
         return enabled_providers
 
     def get_oidc_provider(self, provider_id: str) -> Optional[Dict[str, Any]]:
@@ -629,7 +629,7 @@ class SettingsManager:
             provider_data["provider_id"] = provider_id
             return provider_data
 
-        logger.warning(f"OIDC provider '{provider_id}' not found in config")
+        logger.warning("OIDC provider '%s' not found in config", provider_id)
         return None
 
     def get_oidc_global_settings(self) -> Dict[str, Any]:
