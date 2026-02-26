@@ -1,0 +1,39 @@
+{"filename":"backend/config.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'your-secret-key-change-in-production'","line_number":140}
+{"filename":"backend/config.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'admin'","line_number":147}
+{"filename":"backend/main.py","issue_confidence":"MEDIUM","issue_severity":"MEDIUM","issue_text":"Possible binding to all interfaces.","line_number":326}
+{"filename":"backend/models/git_repositories.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'token'","line_number":24}
+{"filename":"backend/routers/auth/auth.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'bearer'","line_number":108}
+{"filename":"backend/routers/auth/auth.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'bearer'","line_number":229}
+{"filename":"backend/routers/auth/auth.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'bearer'","line_number":294}
+{"filename":"backend/routers/auth/oidc.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: 'bearer'","line_number":325}
+{"filename":"backend/routers/auth/profile.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: ''","line_number":68}
+{"filename":"backend/routers/auth/profile.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: ''","line_number":82}
+{"filename":"backend/routers/auth/profile.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: ''","line_number":304}
+{"filename":"backend/routers/settings/git/debug.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":442}
+{"filename":"backend/routers/settings/git/debug.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":492}
+{"filename":"backend/routers/settings/git/debug.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":699}
+{"filename":"backend/routers/settings/git/files.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":345}
+{"filename":"backend/run_tests.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Consider possible security implications associated with the subprocess module.","line_number":12}
+{"filename":"backend/run_tests.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"subprocess call - check for execution of untrusted input.","line_number":39}
+{"filename":"backend/services/auth/oidc.py","issue_confidence":"MEDIUM","issue_severity":"LOW","issue_text":"Possible hardcoded password: '***MASKED***'","line_number":303}
+{"filename":"backend/services/settings/cache.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":199}
+{"filename":"backend/services/settings/cache.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":222}
+{"filename":"backend/services/settings/git/cache.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Consider possible security implications associated with the subprocess module.","line_number":13}
+{"filename":"backend/services/settings/git/cache.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Starting a process with a partial executable path","line_number":177}
+{"filename":"backend/services/settings/git/cache.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"subprocess call - check for execution of untrusted input.","line_number":177}
+{"filename":"backend/services/settings/git/config.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":46}
+{"filename":"backend/services/settings/git/config.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":51}
+{"filename":"backend/services/settings/git/config.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":75}
+{"filename":"backend/services/settings/git/config.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":83}
+{"filename":"backend/services/settings/git/connection.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Consider possible security implications associated with the subprocess module.","line_number":14}
+{"filename":"backend/services/settings/git/connection.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"subprocess call - check for execution of untrusted input.","line_number":278}
+{"filename":"backend/services/settings/git/operations.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":292}
+{"filename":"backend/services/settings/git/service.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":261}
+{"filename":"backend/services/settings/git/service.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":316}
+{"filename":"backend/services/settings/git/service.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":404}
+{"filename":"backend/services/settings/git/service.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":639}
+{"filename":"backend/services/settings/git/service.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Try, Except, Pass detected.","line_number":697}
+{"filename":"backend/start_celery.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Consider possible security implications associated with the subprocess module.","line_number":50}
+{"filename":"backend/start_celery.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"Starting a process with a partial executable path","line_number":132}
+{"filename":"backend/start_celery.py","issue_confidence":"HIGH","issue_severity":"LOW","issue_text":"subprocess call - check for execution of untrusted input.","line_number":132}
+{"filename":"backend/template_manager.py","issue_confidence":"HIGH","issue_severity":"HIGH","issue_text":"By default, jinja2 sets autoescape to False. Consider using autoescape=True or use the select_autoescape function to mitigate XSS vulnerabilities.","line_number":336}
